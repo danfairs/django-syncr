@@ -6,10 +6,57 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>syncr</strong></big></big></font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>syncr</strong></big></big> (version 0.2)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/jlegg002/src/python-local/syncr/__init__.py">/home/jlegg002/src/python-local/syncr/__init__.py</a></font></td></tr></table>
-    <p></p>
+    <p><tt>django-syncr:&nbsp;Synchronize&nbsp;Django&nbsp;with&nbsp;the&nbsp;web.<br>
+&nbsp;<br>
+This&nbsp;project&nbsp;supplies&nbsp;everything&nbsp;needed&nbsp;to&nbsp;sync&nbsp;a&nbsp;Django&nbsp;project<br>
+with&nbsp;several&nbsp;web&nbsp;APIs.&nbsp;It&nbsp;currently&nbsp;supports&nbsp;4&nbsp;services:<br>
+&nbsp;&nbsp;&nbsp;-&nbsp;Flickr&nbsp;(<a href="http://flickr.com">http://flickr.com</a>)<br>
+&nbsp;&nbsp;&nbsp;-&nbsp;YouTube&nbsp;(<a href="http://youtube.com">http://youtube.com</a>)<br>
+&nbsp;&nbsp;&nbsp;-&nbsp;del.icio.us&nbsp;(<a href="http://del.icio.us">http://del.icio.us</a>)<br>
+&nbsp;&nbsp;&nbsp;-&nbsp;Twitter&nbsp;(<a href="http://twitter.com">http://twitter.com</a>)<br>
+&nbsp;<br>
+Additional&nbsp;web&nbsp;services&nbsp;can&nbsp;be&nbsp;added&nbsp;easily.&nbsp;Suggestions&nbsp;for<br>
+more&nbsp;services&nbsp;and/or&nbsp;patches&nbsp;welcome!<br>
+&nbsp;<br>
+DEPENDENCIES<br>
+&nbsp;<br>
+Each&nbsp;syncr&nbsp;app&nbsp;has&nbsp;different&nbsp;dependencies,&nbsp;but&nbsp;generally&nbsp;you&nbsp;should<br>
+have&nbsp;ElementTree.&nbsp;ET&nbsp;is&nbsp;included&nbsp;in&nbsp;Python&nbsp;2.5,&nbsp;but&nbsp;for&nbsp;older&nbsp;versions<br>
+you&nbsp;need&nbsp;to&nbsp;download&nbsp;it&nbsp;from&nbsp;<a href="http://effbot.org/zone/element-index.htm">http://effbot.org/zone/element-index.htm</a>.<br>
+&nbsp;<br>
+The&nbsp;twitter&nbsp;app&nbsp;depends&nbsp;on&nbsp;python-twitter,&nbsp;available&nbsp;at:<br>
+<a href="http://code.google.com/p/python-twitter/">http://code.google.com/p/python-twitter/</a><br>
+&nbsp;<br>
+The&nbsp;flickr&nbsp;app&nbsp;depends&nbsp;on&nbsp;Beej's&nbsp;Python&nbsp;flickrapi,&nbsp;available&nbsp;at:<br>
+<a href="http://flickrapi.sourceforge.net/">http://flickrapi.sourceforge.net/</a><br>
+&nbsp;<br>
+INSTALLATION&nbsp;/&nbsp;USAGE<br>
+&nbsp;<br>
+1.&nbsp;Add&nbsp;the&nbsp;syncr&nbsp;app&nbsp;to&nbsp;your&nbsp;PYTHONPATH.<br>
+2.&nbsp;Modify&nbsp;your&nbsp;Django&nbsp;settings&nbsp;file&nbsp;by&nbsp;adding&nbsp;the&nbsp;appropriate<br>
+&nbsp;&nbsp;&nbsp;modules&nbsp;to&nbsp;your&nbsp;INSTALLED_APPS.&nbsp;Available&nbsp;modules&nbsp;are:<br>
+&nbsp;&nbsp;&nbsp;'syncr.flickr'<br>
+&nbsp;&nbsp;&nbsp;'syncr.youtube'<br>
+&nbsp;&nbsp;&nbsp;'syncr.twitter'<br>
+&nbsp;&nbsp;&nbsp;'syncr.delicious'<br>
+3.&nbsp;Use&nbsp;the&nbsp;interfaces&nbsp;provided&nbsp;in&nbsp;syncr.app&nbsp;to&nbsp;write&nbsp;scripts<br>
+&nbsp;&nbsp;&nbsp;for&nbsp;synchronizing&nbsp;your&nbsp;web&nbsp;service&nbsp;data&nbsp;with&nbsp;the&nbsp;Django&nbsp;backend.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;For&nbsp;example:<br>
+&nbsp;&nbsp;&nbsp;from&nbsp;syncr.app.flickr&nbsp;import&nbsp;FlickrSyncr<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;f&nbsp;=&nbsp;FlickrSyncr(API_KEY,&nbsp;API_SECRET)<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;#&nbsp;sync&nbsp;all&nbsp;my&nbsp;photos&nbsp;from&nbsp;the&nbsp;past&nbsp;week...<br>
+&nbsp;&nbsp;&nbsp;f.syncRecentPhotos('jesselegg',&nbsp;days=7)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;#&nbsp;sync&nbsp;my&nbsp;favorite&nbsp;photos<br>
+&nbsp;&nbsp;&nbsp;f.syncPublicFavorites('jesselegg')<br>
+&nbsp;<br>
+4.&nbsp;Explore&nbsp;the&nbsp;results&nbsp;in&nbsp;the&nbsp;Django&nbsp;admin&nbsp;interface.</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -21,7 +68,21 @@
 <a href="syncr.delicious.html"><strong>delicious</strong>&nbsp;(package)</a><br>
 </td><td width="25%" valign=top><a href="syncr.flickr.html"><strong>flickr</strong>&nbsp;(package)</a><br>
 <a href="syncr.twitter.html"><strong>twitter</strong>&nbsp;(package)</a><br>
-</td><td width="25%" valign=top><a href="syncr.urls.html">urls</a><br>
-<a href="syncr.youtube.html"><strong>youtube</strong>&nbsp;(package)</a><br>
-</td><td width="25%" valign=top></td></tr></table></td></tr></table>
+</td><td width="25%" valign=top><a href="syncr.youtube.html"><strong>youtube</strong>&nbsp;(package)</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__author__</strong> = 'jesse@jesselegg.com'<br>
+<strong>__version__</strong> = '0.2'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">jesse@jesselegg.com</td></tr></table>
 </body></html>
