@@ -51,7 +51,7 @@ class FlickrSyncr:
 
         Required Arguments
           photo_xml: A flickr photos in Flickrapi's REST XMLNode format
-        """        
+        """
         photo_id = photo_xml.photo[0]['id']
         urls = self.getPhotoSizeURLs(photo_id)
         default_dict = {'flickr_id': photo_xml.photo[0]['id'],
