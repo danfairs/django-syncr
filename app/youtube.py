@@ -67,7 +67,7 @@ class YoutubeSyncr:
                         'updated': self.gtime2datetime(result.findtext('{%s}updated' % ATOM_NS)),
                         'title': result.findtext('{%s}title' % ATOM_NS),
                         'author': self.syncUserFeed(result.findtext('{%s}author/{%s}uri' % (ATOM_NS, ATOM_NS))),
-                        'description': result.findtext('{%s}group/{%s}description' % (MRSS_NS, MRSS_NS)),
+                        'description': result.findtext('{%s}group/{%s}description' % (MRSS_NS, MRSS_NS)) or '',
                         'tag_list': result.findtext('{%s}group/{%s}keywords' % (MRSS_NS, MRSS_NS)),
                         'view_count': result.find('{%s}statistics' % YOUTUBE_NS).attrib['viewCount'],
                         'url': filter(lambda x: x.attrib['rel'] == 'alternate',
@@ -124,7 +124,7 @@ class YoutubeSyncr:
         custom_desc = entry.findtext('{%s}description' % YOUTUBE_NS)
         default_dict = {'feed': entry.findtext('{%s}id' % ATOM_NS),
                         'title': entry.findtext('{%s}title' % ATOM_NS),
-                        'description': custom_desc or entry.findtext('{%s}group/{%s}description' % (MRSS_NS, MRSS_NS)),
+                        'description': custom_desc or entry.findtext('{%s}group/{%s}description' % (MRSS_NS, MRSS_NS)) or '',
                         'original': original}
         obj, created = PlaylistVideo.objects.get_or_create(feed = entry.findtext('{%s}id' % ATOM_NS),
                                                            defaults=default_dict)
@@ -148,8 +148,8 @@ class YoutubeSyncr:
         result = self._request(playlist_feed)
         default_dict = {'feed': playlist_feed,
                         'updated': self.gtime2datetime(result.findtext('{%s}updated' % ATOM_NS)),
-                        'title': result.findtext('{%s}title' % ATOM_NS),
-                        'description': result.findtext('{%s}group/{%s}description' % (MRSS_NS, MRSS_NS)),
+                        'title': result.findtext('{%s}title' % ATOM_NS) or '',
+                        'description': result.findtext('{%s}group/{%s}description' % (MRSS_NS, MRSS_NS)) or '',
                         'author': self.syncUserFeed(result.findtext('{%s}author/{%s}uri' % (ATOM_NS, ATOM_NS))),
                         'url': filter(lambda x: x.attrib['rel'] == 'alternate',
                                       result.findall('{%s}link' % ATOM_NS))[0].attrib['href']}
@@ -169,7 +169,9 @@ class YoutubeSyncr:
         user = self.syncUser(username)
         result = self._request('http://'+self._youtubeGDataHost+self._youtubeFeedBase+'users/%s/playlists' % username)
         for entry in result.findall('{%s}entry' % ATOM_NS):
-            playlist = self.syncPlaylistFeed(entry.findtext('{%s}id' % ATOM_NS))
+            playlist_id = entry.findtext('{%s}id' % ATOM_NS).lstrip('http://gdata.youtube.com/feeds/api/users/jlegg80/playlists/')
+            playlist_feed = 'http://'+self._youtubeGDataHost+self._youtubeFeedBase+'playlists/%s' % playlist_id
+            playlist = self.syncPlaylistFeed(playlist_feed)
             user.playlists.add(playlist)
         return user.playlists.all()
 

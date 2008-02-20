@@ -9,7 +9,7 @@ class Video(models.Model):
     updated     = models.DateTimeField()
     title       = models.CharField(max_length=250)
     author      = models.ForeignKey('User')
-    description = models.TextField()
+    description = models.TextField(blank=True)
     tag_list    = models.CharField(max_length=250)
     view_count  = models.PositiveIntegerField()
     url         = models.URLField()
@@ -39,7 +39,7 @@ class Playlist(models.Model):
     feed        = models.URLField()
     updated     = models.DateTimeField()
     title       = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     author      = models.ForeignKey('User')
     url         = models.URLField()
     videos      = models.ManyToManyField('PlaylistVideo')
@@ -56,7 +56,7 @@ class Playlist(models.Model):
 class PlaylistVideo(models.Model):
     feed        = models.URLField()
     title       = models.CharField(max_length=250)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     original    = models.ForeignKey('Video')
 
     def __unicode__(self):
@@ -73,7 +73,7 @@ class User(models.Model):
     username    = models.CharField(max_length=50)
     first_name  = models.CharField(max_length=50)
     age         = models.PositiveIntegerField(null=True, blank=True)
-    gender      = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    gender      = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
     thumbnail_url = models.URLField()
     watch_count = models.PositiveIntegerField()
     url         = models.URLField()
