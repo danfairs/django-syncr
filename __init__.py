@@ -49,4 +49,4 @@ INSTALLATION / USAGE
 """
 
 __author__ = 'jesse@jesselegg.com'
-__version__ = '0.2'
+__version__ = '0.21'
