@@ -53,18 +53,24 @@ INSTALLATION / USAGE
 
 CHANGELOG
 
-v0.30   - Added support for Flickr EXIF data (Thanks Yash!)
-        - Added Flickr Geo data (latitutde, longitude and accuracy)
-        - These two changes will break your models.
-        - Changed Twitter User model to allow Followers and Friends to be null
-        - Added syncPhoto method to FlickrSyncr to sync an individual photo
-        - Added ability to refresh individual photos by passing refresh=True to
-          the new syncPhoto method
+v0.31 (Mar 18, 2008)
+  * Bug fixes; now works with Python 2.3
+  * Changed User models for Twitter and Youtube, now users TwitterUser and YoutubeUser
 
-v0.21   - Bug fixes with FlickrSyncr and YoutubeSyncr
+v0.30 (Mar 18, 2008)
+  * Added support for Flickr EXIF data (Thanks Yash!)
+  * Added Flickr Geo data (latitutde, longitude and accuracy)
+  * These two changes will break your models.
+  * Changed Twitter User model to allow Followers and Friends to be null
+  * Added syncPhoto method to FlickrSyncr to sync an individual photo
+  * Added ability to refresh individual photos by passing refresh=True to the new syncPhoto method
 
-v0.20   - Initial release
+v0.21 (Feb 20, 2008)
+  * Bug fixes with FlickrSyncr and YoutubeSyncr
+
+v0.20 (Feb 19, 2008)
+  *Initial release
 """
 
 __author__ = 'jesse@jesselegg.com'
-__version__ = '0.30'
+__version__ = '0.31'

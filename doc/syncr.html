@@ -6,7 +6,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>syncr</strong></big></big> (version 0.30)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>syncr</strong></big></big> (version 0.31)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/jlegg002/src/python-local/syncr/__init__.py">/home/jlegg002/src/python-local/syncr/__init__.py</a></font></td></tr></table>
     <p><tt>django-syncr:&nbsp;Synchronize&nbsp;Django&nbsp;with&nbsp;the&nbsp;web.<br>
@@ -64,17 +64,23 @@ INSTALLATION&nbsp;/&nbsp;USAGE<br>
 &nbsp;<br>
 CHANGELOG<br>
 &nbsp;<br>
-v0.30&nbsp;&nbsp;&nbsp;-&nbsp;Added&nbsp;support&nbsp;for&nbsp;Flickr&nbsp;EXIF&nbsp;data&nbsp;(Thanks&nbsp;Yash!)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Added&nbsp;Flickr&nbsp;Geo&nbsp;data&nbsp;(latitutde,&nbsp;longitude&nbsp;and&nbsp;accuracy)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;These&nbsp;two&nbsp;changes&nbsp;will&nbsp;break&nbsp;your&nbsp;models.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Changed&nbsp;Twitter&nbsp;User&nbsp;model&nbsp;to&nbsp;allow&nbsp;Followers&nbsp;and&nbsp;Friends&nbsp;to&nbsp;be&nbsp;null<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Added&nbsp;syncPhoto&nbsp;method&nbsp;to&nbsp;FlickrSyncr&nbsp;to&nbsp;sync&nbsp;an&nbsp;individual&nbsp;photo<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Added&nbsp;ability&nbsp;to&nbsp;refresh&nbsp;individual&nbsp;photos&nbsp;by&nbsp;passing&nbsp;refresh=True&nbsp;to<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;new&nbsp;syncPhoto&nbsp;method<br>
+v0.31&nbsp;(Mar&nbsp;18,&nbsp;2008)<br>
+&nbsp;&nbsp;*&nbsp;Bug&nbsp;fixes;&nbsp;now&nbsp;works&nbsp;with&nbsp;Python&nbsp;2.3<br>
+&nbsp;&nbsp;*&nbsp;Changed&nbsp;User&nbsp;models&nbsp;for&nbsp;Twitter&nbsp;and&nbsp;Youtube,&nbsp;now&nbsp;users&nbsp;TwitterUser&nbsp;and&nbsp;YoutubeUser<br>
 &nbsp;<br>
-v0.21&nbsp;&nbsp;&nbsp;-&nbsp;Bug&nbsp;fixes&nbsp;with&nbsp;FlickrSyncr&nbsp;and&nbsp;YoutubeSyncr<br>
+v0.30&nbsp;(Mar&nbsp;18,&nbsp;2008)<br>
+&nbsp;&nbsp;*&nbsp;Added&nbsp;support&nbsp;for&nbsp;Flickr&nbsp;EXIF&nbsp;data&nbsp;(Thanks&nbsp;Yash!)<br>
+&nbsp;&nbsp;*&nbsp;Added&nbsp;Flickr&nbsp;Geo&nbsp;data&nbsp;(latitutde,&nbsp;longitude&nbsp;and&nbsp;accuracy)<br>
+&nbsp;&nbsp;*&nbsp;These&nbsp;two&nbsp;changes&nbsp;will&nbsp;break&nbsp;your&nbsp;models.<br>
+&nbsp;&nbsp;*&nbsp;Changed&nbsp;Twitter&nbsp;User&nbsp;model&nbsp;to&nbsp;allow&nbsp;Followers&nbsp;and&nbsp;Friends&nbsp;to&nbsp;be&nbsp;null<br>
+&nbsp;&nbsp;*&nbsp;Added&nbsp;syncPhoto&nbsp;method&nbsp;to&nbsp;FlickrSyncr&nbsp;to&nbsp;sync&nbsp;an&nbsp;individual&nbsp;photo<br>
+&nbsp;&nbsp;*&nbsp;Added&nbsp;ability&nbsp;to&nbsp;refresh&nbsp;individual&nbsp;photos&nbsp;by&nbsp;passing&nbsp;refresh=True&nbsp;to&nbsp;the&nbsp;new&nbsp;syncPhoto&nbsp;method<br>
 &nbsp;<br>
-v0.20&nbsp;&nbsp;&nbsp;-&nbsp;Initial&nbsp;release</tt></p>
+v0.21&nbsp;(Feb&nbsp;20,&nbsp;2008)<br>
+&nbsp;&nbsp;*&nbsp;Bug&nbsp;fixes&nbsp;with&nbsp;FlickrSyncr&nbsp;and&nbsp;YoutubeSyncr<br>
+&nbsp;<br>
+v0.20&nbsp;(Feb&nbsp;19,&nbsp;2008)<br>
+&nbsp;&nbsp;*Initial&nbsp;release</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -96,7 +102,7 @@ v0.20&nbsp;&nbsp;&nbsp;-&nbsp;Initial&nbsp;release</tt></p>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>__author__</strong> = 'jesse@jesselegg.com'<br>
-<strong>__version__</strong> = '0.30'</td></tr></table><p>
+<strong>__version__</strong> = '0.31'</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#7799ee">
 <td colspan=3 valign=bottom>&nbsp;<br>
