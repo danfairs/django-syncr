@@ -27,8 +27,8 @@ class User(models.Model):
     name        = models.CharField(max_length=50, blank=True, null=True)
     thumbnail_url = models.URLField()
     url         = models.URLField(blank=True, null=True)
-    friends     = models.ManyToManyField('User', related_name='friends_user_set')
-    followers   = models.ManyToManyField('User', related_name='followers_user_set')
+    friends     = models.ManyToManyField('User', related_name='friends_user_set', blank=True, null=True)
+    followers   = models.ManyToManyField('User', related_name='followers_user_set', blank=True, null=True)
 
     def numFriends(self):
         return self.friends.count()

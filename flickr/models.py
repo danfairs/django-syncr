@@ -2,6 +2,16 @@ from django.db import models
 from tagging.validators import isTagList
 from tagging.models import Tag, TaggedItem
 
+FLICKR_LICENSES = (
+    ('0', 'All Rights Reserved'),
+    ('1', 'Attribution-NonCommercial-ShareAlike License'),
+    ('2', 'Attribution-NonCommercial License'),
+    ('3', 'Attribution-NonCommercial-NoDerivs License'),
+    ('4', 'Attribution License'),
+    ('5', 'Attribution-ShareAlike License'),
+    ('6', 'Attribution-NoDerivs License'),
+)
+
 class Photo(models.Model):
     flickr_id = models.PositiveIntegerField()
     owner = models.CharField(max_length=50)
@@ -16,7 +26,22 @@ class Photo(models.Model):
     thumbnail_url = models.URLField()
     tag_list = models.CharField(max_length=250, validator_list=[isTagList])
     enable_comments = models.BooleanField(default=True)
-
+    license = models.CharField(max_length=50, choices=FLICKR_LICENSES)
+    geo_latitude = models.CharField(max_length=50, blank=True)
+    geo_longitude = models.CharField(max_length=50, blank=True)
+    geo_accuracy = models.CharField(max_length=50, blank=True)
+    exif_make  = models.CharField(max_length=50, blank=True)
+    exif_model = models.CharField(max_length=50, blank=True)
+    exif_orientation = models.CharField(max_length=50, blank=True)
+    exif_exposure = models.CharField(max_length=50, blank=True)
+    exif_software = models.CharField(max_length=50, blank=True)
+    exif_aperture = models.CharField(max_length=50, blank=True)
+    exif_iso = models.CharField(max_length=50, blank=True)
+    exif_metering_mode = models.CharField(max_length=50, blank=True)
+    exif_flash = models.CharField(max_length=50, blank=True)
+    exif_focal_length = models.CharField(max_length=50, blank=True)
+    exif_color_space = models.CharField(max_length=50, blank=True)
+    
     def __unicode__(self):
         return u'%s' % self.title
 

@@ -1,6 +1,7 @@
 import datetime, calendar
 import math
 import flickrapi
+from django.core.exceptions import ObjectDoesNotExist
 from syncr.flickr.models import Photo, PhotoSet, FavoriteList
 
 class FlickrSyncr:
@@ -45,15 +46,78 @@ class FlickrSyncr:
         for el in result.sizes[0].size:
             urls[el['label']] = el['source']
         return urls
+
+    def getExifInfo(self, photo_id):
+        """Obtain the exif information for a photo_id
+
+        Required arguments
+          photo_id: a flickr photo id as a string
+        """
+        def getRawOrClean(xmlnode):
+            try:
+                return xmlnode.clean[0].elementText
+            except AttributeError:
+                return xmlnode.raw[0].elementText
+
+        def testResultKey(result_elem, label):
+            if result_elem['label'] == label:
+                return getRawOrClean(result_elem)
+            else:
+                return None
+
+        exif_data = {'Make': '', 'Model': '', 'Orientation': '',
+                     'Exposure': '', 'Software': '', 'Aperture': '',
+                     'ISO': '', 'Metering Mode': '', 'Flash': '',
+                     'Focal Length': '', 'Color Space': ''}
+        try:
+            result = self.flickr.photos_getExif(photo_id=photo_id)
+        except flickrapi.FlickrError:
+            return exif_data
+
+        # This is tricky, kind of a hack, because not all flickr photos
+        # have a consistent set of exif information...
+        for exif_elem in result.photo[0].exif:
+            for label in exif_data.keys():
+                data = testResultKey(exif_elem, label)
+                if data:
+                    exif_data[label] = data
+        return exif_data
+
+    def getGeoLocation(self, photo_id):
+        """Obtain the geographical location information for a photo_id
+
+        Required Arguments
+          photo_id: A flickr photo id
+        """
+        geo_data = {'Latitude': 'Unknown', 'Longitude': 'Unknown', 'Accuracy': 'Unknown'}
+        try:
+            result = self.flickr.photos_geo_getLocation(photo_id=photo_id)
+            geo_data['Latitude'] = result.photo[0].location[0]['latitude']
+            geo_data['Longitude'] = result.photo[0].location[0]['longitude']
+            geo_data['Accuracy'] = result.photo[0].location[0]['accuracy']
+            return geo_data
+        except flickrapi.FlickrError:
+            return geo_data
         
-    def _syncPhoto(self, photo_xml):
+    def _syncPhoto(self, photo_xml, refresh=False):
         """Synchronize a flickr photo with the Django backend.
 
         Required Arguments
           photo_xml: A flickr photos in Flickrapi's REST XMLNode format
         """
         photo_id = photo_xml.photo[0]['id']
+        # if we're refreshing this data, then delete the Photo first...
+        if refresh:
+            try:
+                p = Photo.objects.get(flickr_id = photo_id)
+                p.delete()
+            except ObjectDoesNotExist:
+                pass
+            
         urls = self.getPhotoSizeURLs(photo_id)
+        exif_data = self.getExifInfo(photo_id)
+        geo_data = self.getGeoLocation(photo_id)
+        
         default_dict = {'flickr_id': photo_xml.photo[0]['id'],
                         'owner': photo_xml.photo[0].owner[0]['username'],
                         'owner_nsid': photo_xml.photo[0].owner[0]['nsid'],
@@ -65,7 +129,23 @@ class FlickrSyncr:
                         'small_url': urls['Small'],
                         'medium_url': urls['Medium'],
                         'thumbnail_url': urls['Thumbnail'],
-                        'tag_list': self._getXMLNodeTag(photo_xml)}
+                        'tag_list': self._getXMLNodeTag(photo_xml),
+                        'license': photo_xml.photo[0]['license'],
+                        'geo_latitude': geo_data['Latitude'],
+                        'geo_longitude': geo_data['Longitude'],
+                        'geo_accuracy': geo_data['Accuracy'],
+                        'exif_model': exif_data['Model'],
+                        'exif_make': exif_data['Make'],
+                        'exif_orientation': exif_data['Orientation'],
+                        'exif_exposure': exif_data['Exposure'],
+                        'exif_software': exif_data['Software'],
+                        'exif_aperture': exif_data['Aperture'],
+                        'exif_iso': exif_data['ISO'],
+                        'exif_metering_mode': exif_data['Metering Mode'],
+                        'exif_flash': exif_data['Flash'],
+                        'exif_focal_length': exif_data['Focal Length'],
+                        'exif_color_space': exif_data['Color Space'],
+                        }
         obj, created = Photo.objects.get_or_create(flickr_id = photo_xml.photo[0]['id'],
                                                    defaults=default_dict)
         return obj
@@ -81,6 +161,16 @@ class FlickrSyncr:
             photo_result = self.flickr.photos_getInfo(photo_id = photo['id'])
             photo_list.append(self._syncPhoto(photo_result))
         return photo_list
+
+    def syncPhoto(self, photo_id, refresh=False):
+        """Synchronize a single flickr photo with Django ORM.
+
+        Required Arguments
+          photo_id: A flickr photo_id
+        """
+        photo_result = self.flickr.photos_getInfo(photo_id = photo_id)
+        photo = self._syncPhoto(photo_result, refresh=refresh)
+        return photo
 
     def syncAllPublic(self, username):
         """Synchronize all of a flickr user's photos with Django.

@@ -24,17 +24,21 @@ http://flickrapi.sourceforge.net/
 
 INSTALLATION / USAGE
 
-1. Add the syncr app to your PYTHONPATH.
-2. Modify your Django settings file by adding the appropriate
-   modules to your INSTALLED_APPS. Available modules are:
+1. Add the syncr app to your PYTHONPATH. I recommend creating a directory
+   for local python packages (like /Users/jesse/python-local/), copying the
+   'syncr' folder (and other "local" apps) there, then adding python-local to
+   your PYTHONPATH.
+2. Modify your Django settings file for your project. Add the appropriate
+   syncr modules to INSTALLED_APPS. Available modules are:
    'syncr.flickr'
    'syncr.youtube'
    'syncr.twitter'
    'syncr.delicious'
 3. Use the interfaces provided in syncr.app to write scripts
-   for synchronizing your web service data with the Django backend.
+   for synchronizing the web service data with the Django backend.
 
    For example:
+   
    from syncr.app.flickr import FlickrSyncr
 
    f = FlickrSyncr(API_KEY, API_SECRET)
@@ -46,7 +50,21 @@ INSTALLATION / USAGE
    f.syncPublicFavorites('jesselegg')
 
 4. Explore the results in the Django admin interface.
+
+CHANGELOG
+
+v0.30   - Added support for Flickr EXIF data (Thanks Yash!)
+        - Added Flickr Geo data (latitutde, longitude and accuracy)
+        - These two changes will break your models.
+        - Changed Twitter User model to allow Followers and Friends to be null
+        - Added syncPhoto method to FlickrSyncr to sync an individual photo
+        - Added ability to refresh individual photos by passing refresh=True to
+          the new syncPhoto method
+
+v0.21   - Bug fixes with FlickrSyncr and YoutubeSyncr
+
+v0.20   - Initial release
 """
 
 __author__ = 'jesse@jesselegg.com'
-__version__ = '0.21'
+__version__ = '0.30'
