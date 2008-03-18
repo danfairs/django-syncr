@@ -1,7 +1,7 @@
 import urllib
 import datetime, time
 import elementtree.ElementTree as ET
-from syncr.youtube.models import User, Video, Playlist, PlaylistVideo
+from syncr.youtube.models import YoutubeUser, Video, Playlist, PlaylistVideo
 
 ATOM_NS         = 'http://www.w3.org/2005/Atom'
 YOUTUBE_NS      = 'http://gdata.youtube.com/schemas/2007'
@@ -74,7 +74,8 @@ class YoutubeSyncr:
                                       result.findall('{%s}link' % ATOM_NS))[0].attrib['href'],
                         'thumbnail_url': filter(lambda x: x.attrib['height'] == '240',
                                                 result.findall('{%s}group/{%s}thumbnail' % (MRSS_NS, MRSS_NS)))[0].attrib['url'],
-                        'length': result.find('{%s}group/{%s}duration' % (MRSS_NS, YOUTUBE_NS)).attrib['seconds']}
+                        'length': result.find('{%s}group/{%s}duration' % (MRSS_NS, YOUTUBE_NS)).attrib['seconds'],
+                        }
         obj, created = Video.objects.get_or_create(feed = video_feed,
                                                    defaults=default_dict)
         return obj
@@ -104,8 +105,9 @@ class YoutubeSyncr:
                         'thumbnail_url': result.find('{%s}thumbnail' % MRSS_NS).attrib['url'],
                         'url': filter(lambda x: x.attrib['rel'] == 'alternate',
                                       result.findall('{%s}link' % ATOM_NS))[0].attrib['href'],
-                        'watch_count': result.find('{%s}statistics' % YOUTUBE_NS).attrib['videoWatchCount']}
-        obj, created = User.objects.get_or_create(username=username,
+                        'watch_count': result.find('{%s}statistics' % YOUTUBE_NS).attrib['videoWatchCount'],
+                        }
+        obj, created = YoutubeUser.objects.get_or_create(username=username,
                                                   defaults=default_dict)
         return obj
 
@@ -125,7 +127,8 @@ class YoutubeSyncr:
         default_dict = {'feed': entry.findtext('{%s}id' % ATOM_NS),
                         'title': entry.findtext('{%s}title' % ATOM_NS),
                         'description': custom_desc or entry.findtext('{%s}group/{%s}description' % (MRSS_NS, MRSS_NS)) or '',
-                        'original': original}
+                        'original': original,
+                        }
         obj, created = PlaylistVideo.objects.get_or_create(feed = entry.findtext('{%s}id' % ATOM_NS),
                                                            defaults=default_dict)
         return obj
@@ -152,7 +155,8 @@ class YoutubeSyncr:
                         'description': result.findtext('{%s}group/{%s}description' % (MRSS_NS, MRSS_NS)) or '',
                         'author': self.syncUserFeed(result.findtext('{%s}author/{%s}uri' % (ATOM_NS, ATOM_NS))),
                         'url': filter(lambda x: x.attrib['rel'] == 'alternate',
-                                      result.findall('{%s}link' % ATOM_NS))[0].attrib['href']}
+                                      result.findall('{%s}link' % ATOM_NS))[0].attrib['href'],
+                        }
         obj, created = Playlist.objects.get_or_create(feed = playlist_feed,
                                                       defaults=default_dict)
         for video in result.findall('{%s}entry' % ATOM_NS):

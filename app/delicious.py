@@ -67,7 +67,7 @@ class DeliciousSyncr:
         """
         self.delicious = DeliciousAPI(username, password)
 
-    def clean_tags(tags):
+    def clean_tags(self, tags):
         """Utility method to clean up del.icio.us tags, removing double
         quotes, duplicate tags and return a unicode string.
 
@@ -83,14 +83,20 @@ class DeliciousSyncr:
         post_hash = post_elem.attrib['hash']
         time_lst = time.strptime(post_elem.attrib['time'], "%Y-%m-%dT%H:%M:%SZ")
         time_obj = datetime.datetime(*time_lst[0:7])
-        tags = clean_tags(post_elem.attrib['tag'])
-        
-        default_dict = {'description': post_elem.attrib['extended'],
+        tags = self.clean_tags(post_elem.attrib['tag'])
+
+        try:
+            extended = post_elem.attrib['extended']
+        except KeyError:
+            extended = ''
+        default_dict = {'description': post_elem.attrib['description'],
                         'tag_list': tags,
                         'url': post_elem.attrib['href'],
+                        # Is post_hash attrib unique to the post/URL or post/username ?!
                         'post_hash': post_hash,
                         'saved_date': time_obj,
-                        'extended_info': post_elem.attrib['extended']}
+                        'extended_info': extended,
+                        }
         obj, created = Bookmark.objects.get_or_create(post_hash = post_hash,
                                                       defaults = default_dict)
         return obj

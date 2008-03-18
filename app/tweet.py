@@ -1,7 +1,8 @@
-import datetime
+import time
+from datetime import datetime
 import twitter
 from django.utils.encoding import smart_unicode
-from syncr.twitter.models import User, Tweet
+from syncr.twitter.models import TwitterUser, Tweet
 
 class TwitterSyncr:
     """TwitterSyncr objects sync Twitter information to the Django
@@ -52,8 +53,9 @@ class TwitterSyncr:
                         'location': user.location,
                         'name': user.name,
                         'thumbnail_url': user.profile_image_url,
-                        'url': user.url}                        
-        obj, created = User.objects.get_or_create(screen_name = user.screen_name,
+                        'url': user.url,
+                        }
+        obj, created = TwitterUser.objects.get_or_create(screen_name = user.screen_name,
                                                   defaults = default_dict)
         return obj
 
@@ -77,11 +79,13 @@ class TwitterSyncr:
           A syncr.twitter.models.Tweet Django object.
         """
         user = self._syncTwitterUser(status.user)
-        pub_time = datetime.datetime.strptime(status.created_at, "%a %b %d %H:%M:%S +0000 %Y")
+        pub_time = time.strptime(status.created_at, "%a %b %d %H:%M:%S +0000 %Y")
+        pub_time = datetime.fromtimestamp(time.mktime(pub_time))
         default_dict = {'pub_time': pub_time,
                         'twitter_id': status.id,
                         'text': smart_unicode(status.text),
-                        'user': user}
+                        'user': user,
+                        }
         obj, created = Tweet.objects.get_or_create(twitter_id = status.id,
                                                    defaults = default_dict)
         return obj

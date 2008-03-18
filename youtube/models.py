@@ -8,7 +8,7 @@ class Video(models.Model):
     published   = models.DateTimeField()
     updated     = models.DateTimeField()
     title       = models.CharField(max_length=250)
-    author      = models.ForeignKey('User')
+    author      = models.ForeignKey('YoutubeUser')
     description = models.TextField(blank=True)
     tag_list    = models.CharField(max_length=250)
     view_count  = models.PositiveIntegerField()
@@ -40,7 +40,7 @@ class Playlist(models.Model):
     updated     = models.DateTimeField()
     title       = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    author      = models.ForeignKey('User')
+    author      = models.ForeignKey('YoutubeUser')
     url         = models.URLField()
     videos      = models.ManyToManyField('PlaylistVideo')
 
@@ -65,7 +65,7 @@ class PlaylistVideo(models.Model):
     class Admin:
         list_display = ('title', 'description')
     
-class User(models.Model):
+class YoutubeUser(models.Model):
     GENDER_CHOICES = (
         ('m', 'Male'),
         ('f', 'Female'))
