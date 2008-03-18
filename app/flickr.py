@@ -167,6 +167,8 @@ class FlickrSyncr:
 
         Required Arguments
           photo_id: A flickr photo_id
+        Optional Arguments
+          refresh: A boolean, if true the Photo will be re-sync'd with flickr
         """
         photo_result = self.flickr.photos_getInfo(photo_id = photo_id)
         photo = self._syncPhoto(photo_result, refresh=refresh)

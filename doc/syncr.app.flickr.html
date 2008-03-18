@@ -55,6 +55,16 @@ Required&nbsp;arguments<br>
 &nbsp;&nbsp;flickr_key:&nbsp;a&nbsp;Flickr&nbsp;API&nbsp;key&nbsp;string<br>
 &nbsp;&nbsp;flickr_secret:&nbsp;a&nbsp;Flickr&nbsp;secret&nbsp;key&nbsp;as&nbsp;a&nbsp;string</tt></dd></dl>
 
+<dl><dt><a name="FlickrSyncr-getExifInfo"><strong>getExifInfo</strong></a>(self, photo_id)</dt><dd><tt>Obtain&nbsp;the&nbsp;exif&nbsp;information&nbsp;for&nbsp;a&nbsp;photo_id<br>
+&nbsp;<br>
+Required&nbsp;arguments<br>
+&nbsp;&nbsp;photo_id:&nbsp;a&nbsp;flickr&nbsp;photo&nbsp;id&nbsp;as&nbsp;a&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="FlickrSyncr-getGeoLocation"><strong>getGeoLocation</strong></a>(self, photo_id)</dt><dd><tt>Obtain&nbsp;the&nbsp;geographical&nbsp;location&nbsp;information&nbsp;for&nbsp;a&nbsp;photo_id<br>
+&nbsp;<br>
+Required&nbsp;Arguments<br>
+&nbsp;&nbsp;photo_id:&nbsp;A&nbsp;flickr&nbsp;photo&nbsp;id</tt></dd></dl>
+
 <dl><dt><a name="FlickrSyncr-getPhotoSizeURLs"><strong>getPhotoSizeURLs</strong></a>(self, photo_id)</dt><dd><tt>Return&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;image&nbsp;URLs&nbsp;for&nbsp;a&nbsp;flickr&nbsp;photo.<br>
 &nbsp;<br>
 Required&nbsp;arguments<br>
@@ -70,6 +80,13 @@ WARNING:&nbsp;This&nbsp;could&nbsp;take&nbsp;a&nbsp;while!<br>
 &nbsp;<br>
 Required&nbsp;arguments<br>
 &nbsp;&nbsp;username:&nbsp;a&nbsp;flickr&nbsp;username&nbsp;as&nbsp;a&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="FlickrSyncr-syncPhoto"><strong>syncPhoto</strong></a>(self, photo_id, refresh<font color="#909090">=False</font>)</dt><dd><tt>Synchronize&nbsp;a&nbsp;single&nbsp;flickr&nbsp;photo&nbsp;with&nbsp;Django&nbsp;ORM.<br>
+&nbsp;<br>
+Required&nbsp;Arguments<br>
+&nbsp;&nbsp;photo_id:&nbsp;A&nbsp;flickr&nbsp;photo_id<br>
+Optional&nbsp;Arguments<br>
+&nbsp;&nbsp;refresh:&nbsp;A&nbsp;boolean,&nbsp;if&nbsp;true&nbsp;the&nbsp;Photo&nbsp;will&nbsp;be&nbsp;re-sync'd&nbsp;with&nbsp;flickr</tt></dd></dl>
 
 <dl><dt><a name="FlickrSyncr-syncPhotoSet"><strong>syncPhotoSet</strong></a>(self, photoset_id)</dt><dd><tt>Synchronize&nbsp;a&nbsp;single&nbsp;flickr&nbsp;photo&nbsp;set&nbsp;based&nbsp;on&nbsp;the&nbsp;set&nbsp;id.<br>
 &nbsp;<br>

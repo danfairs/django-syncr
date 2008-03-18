@@ -6,7 +6,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>syncr</strong></big></big> (version 0.2)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>syncr</strong></big></big> (version 0.30)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/jlegg002/src/python-local/syncr/__init__.py">/home/jlegg002/src/python-local/syncr/__init__.py</a></font></td></tr></table>
     <p><tt>django-syncr:&nbsp;Synchronize&nbsp;Django&nbsp;with&nbsp;the&nbsp;web.<br>
@@ -35,17 +35,21 @@ The&nbsp;flickr&nbsp;app&nbsp;depends&nbsp;on&nbsp;Beej's&nbsp;Python&nbsp;flick
 &nbsp;<br>
 INSTALLATION&nbsp;/&nbsp;USAGE<br>
 &nbsp;<br>
-1.&nbsp;Add&nbsp;the&nbsp;syncr&nbsp;app&nbsp;to&nbsp;your&nbsp;PYTHONPATH.<br>
-2.&nbsp;Modify&nbsp;your&nbsp;Django&nbsp;settings&nbsp;file&nbsp;by&nbsp;adding&nbsp;the&nbsp;appropriate<br>
-&nbsp;&nbsp;&nbsp;modules&nbsp;to&nbsp;your&nbsp;INSTALLED_APPS.&nbsp;Available&nbsp;modules&nbsp;are:<br>
+1.&nbsp;Add&nbsp;the&nbsp;syncr&nbsp;app&nbsp;to&nbsp;your&nbsp;PYTHONPATH.&nbsp;I&nbsp;recommend&nbsp;creating&nbsp;a&nbsp;directory<br>
+&nbsp;&nbsp;&nbsp;for&nbsp;local&nbsp;python&nbsp;packages&nbsp;(like&nbsp;/Users/jesse/python-local/),&nbsp;copying&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;'syncr'&nbsp;folder&nbsp;(and&nbsp;other&nbsp;"local"&nbsp;apps)&nbsp;there,&nbsp;then&nbsp;adding&nbsp;python-local&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;your&nbsp;PYTHONPATH.<br>
+2.&nbsp;Modify&nbsp;your&nbsp;Django&nbsp;settings&nbsp;file&nbsp;for&nbsp;your&nbsp;project.&nbsp;Add&nbsp;the&nbsp;appropriate<br>
+&nbsp;&nbsp;&nbsp;syncr&nbsp;modules&nbsp;to&nbsp;INSTALLED_APPS.&nbsp;Available&nbsp;modules&nbsp;are:<br>
 &nbsp;&nbsp;&nbsp;'syncr.flickr'<br>
 &nbsp;&nbsp;&nbsp;'syncr.youtube'<br>
 &nbsp;&nbsp;&nbsp;'syncr.twitter'<br>
 &nbsp;&nbsp;&nbsp;'syncr.delicious'<br>
 3.&nbsp;Use&nbsp;the&nbsp;interfaces&nbsp;provided&nbsp;in&nbsp;syncr.app&nbsp;to&nbsp;write&nbsp;scripts<br>
-&nbsp;&nbsp;&nbsp;for&nbsp;synchronizing&nbsp;your&nbsp;web&nbsp;service&nbsp;data&nbsp;with&nbsp;the&nbsp;Django&nbsp;backend.<br>
+&nbsp;&nbsp;&nbsp;for&nbsp;synchronizing&nbsp;the&nbsp;web&nbsp;service&nbsp;data&nbsp;with&nbsp;the&nbsp;Django&nbsp;backend.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;For&nbsp;example:<br>
+&nbsp;&nbsp;&nbsp;<br>
 &nbsp;&nbsp;&nbsp;from&nbsp;syncr.app.flickr&nbsp;import&nbsp;FlickrSyncr<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;f&nbsp;=&nbsp;FlickrSyncr(API_KEY,&nbsp;API_SECRET)<br>
@@ -56,7 +60,21 @@ INSTALLATION&nbsp;/&nbsp;USAGE<br>
 &nbsp;&nbsp;&nbsp;#&nbsp;sync&nbsp;my&nbsp;favorite&nbsp;photos<br>
 &nbsp;&nbsp;&nbsp;f.syncPublicFavorites('jesselegg')<br>
 &nbsp;<br>
-4.&nbsp;Explore&nbsp;the&nbsp;results&nbsp;in&nbsp;the&nbsp;Django&nbsp;admin&nbsp;interface.</tt></p>
+4.&nbsp;Explore&nbsp;the&nbsp;results&nbsp;in&nbsp;the&nbsp;Django&nbsp;admin&nbsp;interface.<br>
+&nbsp;<br>
+CHANGELOG<br>
+&nbsp;<br>
+v0.30&nbsp;&nbsp;&nbsp;-&nbsp;Added&nbsp;support&nbsp;for&nbsp;Flickr&nbsp;EXIF&nbsp;data&nbsp;(Thanks&nbsp;Yash!)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Added&nbsp;Flickr&nbsp;Geo&nbsp;data&nbsp;(latitutde,&nbsp;longitude&nbsp;and&nbsp;accuracy)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;These&nbsp;two&nbsp;changes&nbsp;will&nbsp;break&nbsp;your&nbsp;models.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Changed&nbsp;Twitter&nbsp;User&nbsp;model&nbsp;to&nbsp;allow&nbsp;Followers&nbsp;and&nbsp;Friends&nbsp;to&nbsp;be&nbsp;null<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Added&nbsp;syncPhoto&nbsp;method&nbsp;to&nbsp;FlickrSyncr&nbsp;to&nbsp;sync&nbsp;an&nbsp;individual&nbsp;photo<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Added&nbsp;ability&nbsp;to&nbsp;refresh&nbsp;individual&nbsp;photos&nbsp;by&nbsp;passing&nbsp;refresh=True&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;new&nbsp;syncPhoto&nbsp;method<br>
+&nbsp;<br>
+v0.21&nbsp;&nbsp;&nbsp;-&nbsp;Bug&nbsp;fixes&nbsp;with&nbsp;FlickrSyncr&nbsp;and&nbsp;YoutubeSyncr<br>
+&nbsp;<br>
+v0.20&nbsp;&nbsp;&nbsp;-&nbsp;Initial&nbsp;release</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -68,7 +86,8 @@ INSTALLATION&nbsp;/&nbsp;USAGE<br>
 <a href="syncr.delicious.html"><strong>delicious</strong>&nbsp;(package)</a><br>
 </td><td width="25%" valign=top><a href="syncr.flickr.html"><strong>flickr</strong>&nbsp;(package)</a><br>
 <a href="syncr.twitter.html"><strong>twitter</strong>&nbsp;(package)</a><br>
-</td><td width="25%" valign=top><a href="syncr.youtube.html"><strong>youtube</strong>&nbsp;(package)</a><br>
+</td><td width="25%" valign=top><a href="syncr.urls.html">urls</a><br>
+<a href="syncr.youtube.html"><strong>youtube</strong>&nbsp;(package)</a><br>
 </td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -77,7 +96,7 @@ INSTALLATION&nbsp;/&nbsp;USAGE<br>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>__author__</strong> = 'jesse@jesselegg.com'<br>
-<strong>__version__</strong> = '0.2'</td></tr></table><p>
+<strong>__version__</strong> = '0.30'</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#7799ee">
 <td colspan=3 valign=bottom>&nbsp;<br>
