@@ -57,7 +57,10 @@ class FlickrSyncr:
             try:
                 return xmlnode.clean[0].elementText
             except AttributeError:
-                return xmlnode.raw[0].elementText
+		try:
+		    return xmlnode.raw[0].elementText
+		except AttributeError:
+		    return ''
 
         def testResultKey(result_elem, label):
             if result_elem['label'] == label:
