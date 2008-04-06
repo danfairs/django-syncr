@@ -120,36 +120,39 @@ class FlickrSyncr:
         urls = self.getPhotoSizeURLs(photo_id)
         exif_data = self.getExifInfo(photo_id)
         geo_data = self.getGeoLocation(photo_id)
-        
-        default_dict = {'flickr_id': photo_xml.photo[0]['id'],
-                        'owner': photo_xml.photo[0].owner[0]['username'],
-                        'owner_nsid': photo_xml.photo[0].owner[0]['nsid'],
-                        'title': photo_xml.photo[0].title[0].elementText,
-                        'description': photo_xml.photo[0].description[0].elementText,
-                        'taken_date': datetime.datetime.strptime(photo_xml.photo[0].dates[0]['taken'], "%Y-%m-%d %H:%M:%S"),
-                        'photopage_url': photo_xml.photo[0].urls[0].url[0].elementText,
-                        'square_url': urls['Square'],
-                        'small_url': urls['Small'],
-                        'medium_url': urls['Medium'],
-                        'thumbnail_url': urls['Thumbnail'],
-                        'tag_list': self._getXMLNodeTag(photo_xml),
-                        'license': photo_xml.photo[0]['license'],
-                        'geo_latitude': geo_data['Latitude'],
-                        'geo_longitude': geo_data['Longitude'],
-                        'geo_accuracy': geo_data['Accuracy'],
-                        'exif_model': exif_data['Model'],
-                        'exif_make': exif_data['Make'],
-                        'exif_orientation': exif_data['Orientation'],
-                        'exif_exposure': exif_data['Exposure'],
-                        'exif_software': exif_data['Software'],
-                        'exif_aperture': exif_data['Aperture'],
-                        'exif_iso': exif_data['ISO'],
-                        'exif_metering_mode': exif_data['Metering Mode'],
-                        'exif_flash': exif_data['Flash'],
-                        'exif_focal_length': exif_data['Focal Length'],
-                        'exif_color_space': exif_data['Color Space'],
-                        }
-        obj, created = Photo.objects.get_or_create(flickr_id = photo_xml.photo[0]['id'],
+
+	try:
+	    default_dict = {'flickr_id': photo_xml.photo[0]['id'],
+			    'owner': photo_xml.photo[0].owner[0]['username'],
+			    'owner_nsid': photo_xml.photo[0].owner[0]['nsid'],
+			    'title': photo_xml.photo[0].title[0].elementText,
+			    'description': photo_xml.photo[0].description[0].elementText,
+			    'taken_date': datetime.datetime.strptime(photo_xml.photo[0].dates[0]['taken'], "%Y-%m-%d %H:%M:%S"),
+			    'photopage_url': photo_xml.photo[0].urls[0].url[0].elementText,
+			    'square_url': urls['Square'],
+			    'small_url': urls['Small'],
+			    'medium_url': urls['Medium'],
+			    'thumbnail_url': urls['Thumbnail'],
+			    'tag_list': self._getXMLNodeTag(photo_xml),
+			    'license': photo_xml.photo[0]['license'],
+			    'geo_latitude': geo_data['Latitude'],
+			    'geo_longitude': geo_data['Longitude'],
+			    'geo_accuracy': geo_data['Accuracy'],
+			    'exif_model': exif_data['Model'],
+			    'exif_make': exif_data['Make'],
+			    'exif_orientation': exif_data['Orientation'],
+			    'exif_exposure': exif_data['Exposure'],
+			    'exif_software': exif_data['Software'],
+			    'exif_aperture': exif_data['Aperture'],
+			    'exif_iso': exif_data['ISO'],
+			    'exif_metering_mode': exif_data['Metering Mode'],
+			    'exif_flash': exif_data['Flash'],
+			    'exif_focal_length': exif_data['Focal Length'],
+			    'exif_color_space': exif_data['Color Space'],
+			    }
+	except AttributeError:
+	    return
+	obj, created = Photo.objects.get_or_create(flickr_id = photo_xml.photo[0]['id'],
                                                    defaults=default_dict)
         return obj
 
