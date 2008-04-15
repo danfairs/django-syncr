@@ -173,7 +173,7 @@ class YoutubeSyncr:
         user = self.syncUser(username)
         result = self._request('http://'+self._youtubeGDataHost+self._youtubeFeedBase+'users/%s/playlists' % username)
         for entry in result.findall('{%s}entry' % ATOM_NS):
-            playlist_id = entry.findtext('{%s}id' % ATOM_NS).lstrip('http://gdata.youtube.com/feeds/api/users/jlegg80/playlists/')
+            playlist_id = entry.findtext('{%s}id' % ATOM_NS).split('/')[-1]
             playlist_feed = 'http://'+self._youtubeGDataHost+self._youtubeFeedBase+'playlists/%s' % playlist_id
             playlist = self.syncPlaylistFeed(playlist_feed)
             user.playlists.add(playlist)

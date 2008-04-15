@@ -17,7 +17,7 @@ class Photo(models.Model):
     owner = models.CharField(max_length=50)
     owner_nsid = models.CharField(max_length=50)
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=250, blank=True)
+    description = models.TextField(blank=True)
     taken_date = models.DateTimeField()
     photopage_url = models.URLField()
     square_url = models.URLField()
