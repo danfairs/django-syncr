@@ -1,7 +1,11 @@
 import urllib
 import datetime, time
-import elementtree.ElementTree as ET
 from syncr.youtube.models import YoutubeUser, Video, Playlist, PlaylistVideo
+
+try:
+    import xml.etree.ElementTree as ET
+except:
+    import elementtree.ElementTree as ET
 
 ATOM_NS         = 'http://www.w3.org/2005/Atom'
 YOUTUBE_NS      = 'http://gdata.youtube.com/schemas/2007'
