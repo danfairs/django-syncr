@@ -124,7 +124,7 @@ class DeliciousSyncr:
         """
         params = dict()
         if tag: params = {'tag': tag}
-        result = self.delicious._result('posts/all?', params)
+        result = self.delicious._request('posts/all?', params)
         root = result.getroot()
         for post in root.getchildren():
             self._syncPost(post)
