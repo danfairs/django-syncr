@@ -5,4 +5,4 @@ flickr, youtube, delicious and twitter.
 """
 
 __author__ = 'jesse@jesselegg.com'
-__version__ = '0.31'
+__version__ = '0.35'

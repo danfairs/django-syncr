@@ -53,6 +53,11 @@ INSTALLATION / USAGE
 
 CHANGELOG
 
+v0.35 (April 17, 2008)
+ * FlickrSyncr requires the use of flickrapi 1.2 (http://flickrapi.sourceforge.net/)
+ * Fixed a bunch of bugs related to Flickr syncing (or not) exif and other data
+ * Fixed miscellaneous typos that people submitted (THANKS GUYS!)
+
 v0.31 (Mar 18, 2008)
   * Bug fixes; now works with Python 2.3
   * Changed User models for Twitter and Youtube, now users TwitterUser and YoutubeUser
@@ -73,4 +78,4 @@ v0.20 (Feb 19, 2008)
 """
 
 __author__ = 'jesse@jesselegg.com'
-__version__ = '0.31'
+__version__ = '0.35'
