@@ -22,7 +22,7 @@ class FlickrSyncr:
           flickr_key: a Flickr API key string
           flickr_secret: a Flickr secret key as a string        
         """
-        self.flickr = flickrapi.FlickrAPI(flickr_key, flickr_secret)
+        self.flickr = flickrapi.FlickrAPI(flickr_key, flickr_secret, format='xmlnode')
 
     def user2nsid(self, username):
         """Convert a flickr username to an NSID
@@ -31,7 +31,7 @@ class FlickrSyncr:
 
     def _getXMLNodeTag(self, node):
         try:
-            return " ".join([x.elementText for x in node.photo[0].tags[0].tag])
+            return " ".join([x.text for x in node.photo[0].tags[0].tag])
         except AttributeError:
             return " "
 
@@ -55,10 +55,10 @@ class FlickrSyncr:
         """
         def getRawOrClean(xmlnode):
             try:
-                return xmlnode.clean[0].elementText
+                return xmlnode.clean[0].text
             except AttributeError:
 		try:
-		    return xmlnode.raw[0].elementText
+		    return xmlnode.raw[0].text
 		except AttributeError:
 		    return ''
 
@@ -77,14 +77,15 @@ class FlickrSyncr:
         except flickrapi.FlickrError:
             return exif_data
 
-        # This is tricky, kind of a hack, because not all flickr photos
-        # have a consistent set of exif information...
-        for exif_elem in result.photo[0].exif:
-            for label in exif_data.keys():
-                data = testResultKey(exif_elem, label)
-                if data:
-                    exif_data[label] = data
-        return exif_data
+	try:
+	    for exif_elem in result.photo[0].exif:
+		for label in exif_data.keys():
+		    data = testResultKey(exif_elem, label)
+		    if data:
+			exif_data[label] = data
+	    return exif_data
+	except:
+	    return exif_data
 
     def getGeoLocation(self, photo_id):
         """Obtain the geographical location information for a photo_id
@@ -121,37 +122,34 @@ class FlickrSyncr:
         exif_data = self.getExifInfo(photo_id)
         geo_data = self.getGeoLocation(photo_id)
 
-	try:
-	    default_dict = {'flickr_id': photo_xml.photo[0]['id'],
-			    'owner': photo_xml.photo[0].owner[0]['username'],
-			    'owner_nsid': photo_xml.photo[0].owner[0]['nsid'],
-			    'title': photo_xml.photo[0].title[0].elementText,
-			    'description': photo_xml.photo[0].description[0].elementText,
-			    'taken_date': datetime.datetime.strptime(photo_xml.photo[0].dates[0]['taken'], "%Y-%m-%d %H:%M:%S"),
-			    'photopage_url': photo_xml.photo[0].urls[0].url[0].elementText,
-			    'square_url': urls['Square'],
-			    'small_url': urls['Small'],
-			    'medium_url': urls['Medium'],
-			    'thumbnail_url': urls['Thumbnail'],
-			    'tag_list': self._getXMLNodeTag(photo_xml),
-			    'license': photo_xml.photo[0]['license'],
-			    'geo_latitude': geo_data['Latitude'],
-			    'geo_longitude': geo_data['Longitude'],
-			    'geo_accuracy': geo_data['Accuracy'],
-			    'exif_model': exif_data['Model'],
-			    'exif_make': exif_data['Make'],
-			    'exif_orientation': exif_data['Orientation'],
-			    'exif_exposure': exif_data['Exposure'],
-			    'exif_software': exif_data['Software'],
-			    'exif_aperture': exif_data['Aperture'],
-			    'exif_iso': exif_data['ISO'],
-			    'exif_metering_mode': exif_data['Metering Mode'],
-			    'exif_flash': exif_data['Flash'],
-			    'exif_focal_length': exif_data['Focal Length'],
-			    'exif_color_space': exif_data['Color Space'],
-			    }
-	except AttributeError:
-	    return
+	default_dict = {'flickr_id': photo_xml.photo[0]['id'],
+			'owner': photo_xml.photo[0].owner[0]['username'],
+			'owner_nsid': photo_xml.photo[0].owner[0]['nsid'],
+			'title': photo_xml.photo[0].title[0].text,
+			'description': photo_xml.photo[0].description[0].text,
+			'taken_date': datetime.datetime.strptime(photo_xml.photo[0].dates[0]['taken'], "%Y-%m-%d %H:%M:%S"),
+			'photopage_url': photo_xml.photo[0].urls[0].url[0].text,
+			'square_url': urls['Square'],
+			'small_url': urls['Small'],
+			'medium_url': urls['Medium'],
+			'thumbnail_url': urls['Thumbnail'],
+			'tag_list': self._getXMLNodeTag(photo_xml),
+			'license': photo_xml.photo[0]['license'],
+			'geo_latitude': geo_data['Latitude'],
+			'geo_longitude': geo_data['Longitude'],
+			'geo_accuracy': geo_data['Accuracy'],
+			'exif_model': exif_data['Model'],
+			'exif_make': exif_data['Make'],
+			'exif_orientation': exif_data['Orientation'],
+			'exif_exposure': exif_data['Exposure'],
+			'exif_software': exif_data['Software'],
+			'exif_aperture': exif_data['Aperture'],
+			'exif_iso': exif_data['ISO'],
+			'exif_metering_mode': exif_data['Metering Mode'],
+			'exif_flash': exif_data['Flash'],
+			'exif_focal_length': exif_data['Focal Length'],
+			'exif_color_space': exif_data['Color Space'],
+			}
 	obj, created = Photo.objects.get_or_create(flickr_id = photo_xml.photo[0]['id'],
                                                    defaults=default_dict)
         return obj
@@ -188,7 +186,7 @@ class FlickrSyncr:
           username: a flickr username as a string
         """
         nsid = self.user2nsid(username)
-        count = int(self.flickr.people_getInfo(user_id=nsid).person[0].photos[0].count[0].elementText)
+        count = int(self.flickr.people_getInfo(user_id=nsid).person[0].photos[0].count[0].text)
         pages = int(math.ceil(count / 500))
 
         for page in range(1, pages + 1):
@@ -241,15 +239,15 @@ class FlickrSyncr:
         """
         photoset_xml = self.flickr.photosets_getInfo(photoset_id = photoset_id)
         nsid = photoset_xml.photoset[0]['owner']
-        username = self.flickr.people_getInfo(user_id = nsid).person[0].username[0].elementText
+	username = self.flickr.people_getInfo(user_id = nsid).person[0].username[0].text
         result = self.flickr.photosets_getPhotos(photoset_id = photoset_id)
         page_count = int(result.photoset[0]['pages'])
 
         d_photoset, created = PhotoSet.objects.get_or_create(flickr_id = photoset_id,
                                                     defaults = {'owner': username,
                                                                 'flickr_id': result.photoset[0]['id'],
-                                                                'title': photoset_xml.photoset[0].title[0].elementText,
-                                                                'description': photoset_xml.photoset[0].description[0].elementText})
+                                                                'title': photoset_xml.photoset[0].title[0].text,
+                                                                'description': photoset_xml.photoset[0].description[0].text})
         for page in range(1, page_count+1):
             photo_list = self._syncPhotoXMLList(result.photoset[0].photo)
             for photo in photo_list:
