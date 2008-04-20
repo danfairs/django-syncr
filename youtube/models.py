@@ -13,7 +13,7 @@ class Video(models.Model):
     tag_list    = models.CharField(max_length=250)
     view_count  = models.PositiveIntegerField()
     url         = models.URLField()
-    thumbnail_url = models.URLField()
+    thumbnail_url = models.URLField(blank=True)
     length      = models.PositiveIntegerField()
 
     def _get_tags(self):

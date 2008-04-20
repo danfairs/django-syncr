@@ -106,11 +106,16 @@ class YoutubeSyncr:
                         'first_name': result.findtext('{%s}firstName' % YOUTUBE_NS) or '',
                         'age': result.findtext('{%s}age' % YOUTUBE_NS),
                         'gender': result.findtext('{%s}gender' % YOUTUBE_NS) or '',
-                        'thumbnail_url': result.find('{%s}thumbnail' % MRSS_NS).attrib['url'],
+                        'thumbnail_url': '',
                         'url': filter(lambda x: x.attrib['rel'] == 'alternate',
                                       result.findall('{%s}link' % ATOM_NS))[0].attrib['href'],
-                        'watch_count': result.find('{%s}statistics' % YOUTUBE_NS).attrib['videoWatchCount'],
+                        'watch_count': 0,
                         }
+	if 'videoWatchCount' in result.find('{%s}statistics' % YOUTUBE_NS).keys():
+	    default_dict['watch_count'] = result.find('{%s}statistics' % YOUTUBE_NS).attrib['videoWatchCount']
+	if result.find('{%s}thumbnail' % MRSS_NS):
+	    default_dict['thumbnail_url'] = result.find('{%s}thumbnail' % MRSS_NS).attrib['url']
+	    
         obj, created = YoutubeUser.objects.get_or_create(username=username,
                                                   defaults=default_dict)
         return obj
