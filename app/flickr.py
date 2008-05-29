@@ -1,4 +1,5 @@
-import datetime, calendar
+import calendar
+from datetime import datetime
 import math
 import flickrapi
 from django.core.exceptions import ObjectDoesNotExist
@@ -127,7 +128,7 @@ class FlickrSyncr:
 			'owner_nsid': photo_xml.photo[0].owner[0]['nsid'],
 			'title': photo_xml.photo[0].title[0].text,
 			'description': photo_xml.photo[0].description[0].text,
-			'taken_date': datetime.datetime.strptime(photo_xml.photo[0].dates[0]['taken'], "%Y-%m-%d %H:%M:%S"),
+			'taken_date': datetime.strptime(photo_xml.photo[0].dates[0]['taken'], "%Y-%m-%d %H:%M:%S"),
 			'photopage_url': photo_xml.photo[0].urls[0].url[0].text,
 			'square_url': urls['Square'],
 			'small_url': urls['Small'],
@@ -202,7 +203,7 @@ class FlickrSyncr:
           days: sync photos since this number of days, defaults
                 to 1 (yesterday)
         """
-        syncSince = datetime.datetime.now() - datetime.timedelta(days=days)
+        syncSince = datetime.now() - datetime.timedelta(days=days)
         timestamp = calendar.timegm(syncSince.timetuple())
         nsid = self.user2nsid(username)
         
@@ -221,7 +222,7 @@ class FlickrSyncr:
         """
         nsid = self.user2nsid(username)
         favList, created = FavoriteList.objects.get_or_create(owner = username,
-                                                     defaults = {'sync_date': datetime.datetime.now()})
+                                                     defaults = {'sync_date': datetime.now()})
 
         result = self.flickr.favorites_getPublicList(user_id=nsid, per_page=500)
         page_count = int(result.photos[0]['pages'])

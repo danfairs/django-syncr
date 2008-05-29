@@ -100,7 +100,7 @@ class YoutubeSyncr:
           user_feed: a Youtube user GData feed URL
         """
         result = self._request(user_feed).getroot()
-        username = result.findtext('{%s}id' % ATOM_NS).lstrip('http://'+self._youtubeGDataHost+self._youtubeFeedBase+'users/')
+        username = result.findtext('{%s}id' % ATOM_NS).replace('http://'+self._youtubeGDataHost+self._youtubeFeedBase+'users/', '')
         default_dict = {'feed': user_feed,
                         'username': username,
                         'first_name': result.findtext('{%s}firstName' % YOUTUBE_NS) or '',
