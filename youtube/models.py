@@ -78,7 +78,8 @@ class YoutubeUser(models.Model):
     watch_count = models.PositiveIntegerField()
     url         = models.URLField()
     playlists   = models.ManyToManyField('Playlist')
-    favorites   = models.ManyToManyField('Video')
+    favorites   = models.ManyToManyField('Video', related_name='favorited_by')
+    uploads     = models.ManyToManyField('Video', related_name='uploaded_by')
 
     def __unicode__(self):
         return u'%s' % self.username

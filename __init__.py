@@ -53,6 +53,12 @@ INSTALLATION / USAGE
 
 CHANGELOG
 
+v0.36 (May 30, 2008)
+ * Added syncUserUploads method to YoutubeSyncr class
+ * Added uploads field to YoutubeUser model as M2M with related name 'uploaded_by'
+ * Changed related name of favorites field in YoutubeUser model to 'favorited_by'
+ * Fixed a bug in timedelta usage with FlickrSyncr
+
 v0.35 (April 17, 2008)
  * FlickrSyncr requires the use of flickrapi 1.2 (http://flickrapi.sourceforge.net/)
  * Fixed a bunch of bugs related to Flickr syncing (or not) exif and other data
@@ -78,4 +84,4 @@ v0.20 (Feb 19, 2008)
 """
 
 __author__ = 'jesse@jesselegg.com'
-__version__ = '0.35'
+__version__ = '0.36'

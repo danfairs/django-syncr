@@ -204,3 +204,17 @@ class YoutubeSyncr:
             video = self.syncVideoFeed(entry.findtext('{%s}id' % ATOM_NS))
             user.favorites.add(video)
         return user.favorites.all()
+
+    def syncUserUploads(self, username):
+	"""Synchronize a user's uploads feed
+
+	Required arguments
+	  username: a Youtube username as a string
+	"""
+	user = self.syncUser(username)
+	result = self._request('http://'+self._youtubeGDataHost+self._youtubeFeedBase+'users/%s/uploads' % username)
+
+	for entry in result.findall('{%s}entry' % ATOM_NS):
+	    video = self.syncVideoFeed(entry.findtext('{%s}id' % ATOM_NS))
+	    user.uploads.add(video)
+	return user.uploads.all()
