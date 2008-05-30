@@ -111,8 +111,12 @@ class YoutubeSyncr:
                                       result.findall('{%s}link' % ATOM_NS))[0].attrib['href'],
                         'watch_count': 0,
                         }
-	if 'videoWatchCount' in result.find('{%s}statistics' % YOUTUBE_NS).keys():
-	    default_dict['watch_count'] = result.find('{%s}statistics' % YOUTUBE_NS).attrib['videoWatchCount']
+	try:
+	    if 'videoWatchCount' in result.find('{%s}statistics' % YOUTUBE_NS).keys():
+		default_dict['watch_count'] = result.find('{%s}statistics' % YOUTUBE_NS).attrib['videoWatchCount']
+	except AttributeError:
+	    default_dict['watch_count'] = 0
+	    
 	if result.find('{%s}thumbnail' % MRSS_NS):
 	    default_dict['thumbnail_url'] = result.find('{%s}thumbnail' % MRSS_NS).attrib['url']
 	    
