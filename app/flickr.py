@@ -104,6 +104,12 @@ class FlickrSyncr:
             return geo_data
         except flickrapi.FlickrError:
             return geo_data
+
+    def getExifKey(self, exif_data, key):
+	try:
+	    return exif_data[key]
+	else:
+	    return ''
         
     def _syncPhoto(self, photo_xml, refresh=False):
         """Synchronize a flickr photo with the Django backend.
@@ -140,17 +146,17 @@ class FlickrSyncr:
 			'geo_latitude': geo_data['Latitude'],
 			'geo_longitude': geo_data['Longitude'],
 			'geo_accuracy': geo_data['Accuracy'],
-			'exif_model': exif_data['Model'],
-			'exif_make': exif_data['Make'],
-			'exif_orientation': exif_data['Orientation'],
-			'exif_exposure': exif_data['Exposure'],
-			'exif_software': exif_data['Software'],
-			'exif_aperture': exif_data['Aperture'],
-			'exif_iso': exif_data['ISO'],
-			'exif_metering_mode': exif_data['Metering Mode'],
-			'exif_flash': exif_data['Flash'],
-			'exif_focal_length': exif_data['Focal Length'],
-			'exif_color_space': exif_data['Color Space'],
+			'exif_model': getExifKey(exif_data, 'Model'),
+			'exif_make': getExifKey(exif_data, 'Make'),
+			'exif_orientation': getExifKey(exif_data, 'Orientation'),
+			'exif_exposure': getExifKey(exif_data, 'Exposure'),
+			'exif_software': getExifKey(exif_data, 'Software'),
+			'exif_aperture': getExifKey(exif_data, 'Aperture'),
+			'exif_iso': getExifKey(exif_data, 'ISO'),
+			'exif_metering_mode': getExifKey(exif_data, 'Metering Mode'),
+			'exif_flash': getExifKey(exif_data, 'Flash'),
+			'exif_focal_length': getExifKey(exif_data, 'Focal Length'),
+			'exif_color_space': getExifKey(exif_data, 'Color Space'),
 			}
 	obj, created = Photo.objects.get_or_create(flickr_id = photo_xml.photo[0]['id'],
                                                    defaults=default_dict)
