@@ -108,7 +108,7 @@ class FlickrSyncr:
     def getExifKey(self, exif_data, key):
 	try:
 	    return exif_data[key]
-	else:
+	except:
 	    return ''
         
     def _syncPhoto(self, photo_xml, refresh=False):
