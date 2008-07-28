@@ -32,9 +32,6 @@ class Video(models.Model):
     def __unicode__(self):
         return u'%s' % self.title
 
-    class Admin:
-        list_display = ('title', 'author', 'video_id', 'view_count')
-
 class Playlist(models.Model):
     feed        = models.URLField()
     updated     = models.DateTimeField()
@@ -50,9 +47,6 @@ class Playlist(models.Model):
     def numVideos(self):
         return self.videos.count()
 
-    class Admin:
-        list_display = ('title', 'description', 'author', 'numVideos')
-
 class PlaylistVideo(models.Model):
     feed        = models.URLField()
     title       = models.CharField(max_length=250)
@@ -61,9 +55,6 @@ class PlaylistVideo(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.title
-
-    class Admin:
-        list_display = ('title', 'description')
     
 class YoutubeUser(models.Model):
     GENDER_CHOICES = (
@@ -83,6 +74,3 @@ class YoutubeUser(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.username
-
-    class Admin:
-        list_display = ('username', 'first_name', 'age', 'gender', 'watch_count')

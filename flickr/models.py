@@ -59,10 +59,6 @@ class Photo(models.Model):
         ordering = ('-taken_date',)
         get_latest_by = 'taken_date'
 
-    class Admin:
-        list_display = ('taken_date', 'title', 'flickr_id', 'owner')
-        search_fields = ['title', 'description']
-        date_hierarchy = 'taken_date'
 
 class FavoriteList(models.Model):
     owner = models.CharField(max_length=50)
@@ -74,9 +70,6 @@ class FavoriteList(models.Model):
 
     def __unicode__(self):
         return u"%s's favorite photos" % self.owner
-    
-    class Admin:
-        list_display = ('owner', 'sync_date', 'numPhotos')
 
 class PhotoSet(models.Model):
     flickr_id = models.CharField(max_length=50)
@@ -90,6 +83,3 @@ class PhotoSet(models.Model):
 
     def __unicode__(self):
         return u"%s photo set by %s" % (self.title, self.owner)
-
-    class Admin:
-        list_display = ('flickr_id', 'owner', 'title')

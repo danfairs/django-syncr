@@ -1,7 +1,9 @@
 import time
 from datetime import datetime
+import calendar
 import twitter
 from django.utils.encoding import smart_unicode
+from django.conf import settings
 from syncr.twitter.models import TwitterUser, Tweet
 
 class TwitterSyncr:
@@ -79,8 +81,16 @@ class TwitterSyncr:
           A syncr.twitter.models.Tweet Django object.
         """
         user = self._syncTwitterUser(status.user)
-        pub_time = time.strptime(status.created_at, "%a %b %d %H:%M:%S +0000 %Y")
-        pub_time = datetime.fromtimestamp(time.mktime(pub_time))
+	#create_time = time.strptime(status.created_at, "%a %b %d %H:%M:%S +0000 %Y")
+	time.tzset()
+	create_time = time.strptime(status.GetCreatedAt() + ' GMT', '%a %b %d %H:%M:%S +0000 %Y %Z')
+	#create_time = time.gmtime(status.GetCreatedAtInSeconds() + ' GMT')
+	#timestamp = calendar.timegm(create_time)
+	#print timestamp
+        #pub_time = datetime.fromtimestamp(timestamp)
+	timestamp = calendar.timegm(create_time)
+	pub_time = datetime.fromtimestamp(timestamp, settings.TIME_ZONE)
+	
         default_dict = {'pub_time': pub_time,
                         'twitter_id': status.id,
                         'text': smart_unicode(status.text),

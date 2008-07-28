@@ -12,13 +12,7 @@ class Tweet(models.Model):
     def url(self):
         return u'http://twitter.com/%s/statuses/%s' % (self.user.screen_name, self.twitter_id)
 
-    class Meta:
-        ordering = ('-pub_time',)
-        get_latest_by = 'pub_time'
-        
-    class Admin:
-        date_hierarchy = 'pub_time'
-        list_display = ('user', 'pub_time', 'text')
+
 
 class TwitterUser(models.Model):
     screen_name = models.CharField(max_length=50)
@@ -38,6 +32,3 @@ class TwitterUser(models.Model):
 
     def __unicode__(self):
         return self.screen_name
-
-    class Admin:
-        list_display = ('screen_name', 'name', 'location', 'numFriends', 'numFollowers')

@@ -30,8 +30,3 @@ class Bookmark(models.Model):
     class Meta:
         ordering = ('-saved_date',)
         get_latest_by = 'saved_date'
-
-    class Admin:
-        list_display = ('saved_date', 'description', 'extended_info')
-        search_fields = ['description', 'extended_info']
-        date_hierarchy = 'saved_date'

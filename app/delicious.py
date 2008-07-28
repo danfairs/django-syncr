@@ -81,8 +81,10 @@ class DeliciousSyncr:
 
     def _syncPost(self, post_elem):
         post_hash = post_elem.attrib['hash']
-        time_lst = time.strptime(post_elem.attrib['time'], "%Y-%m-%dT%H:%M:%SZ")
-        time_obj = datetime.datetime(*time_lst[0:7])
+        deli_time = time.strptime(post_elem.attrib['time'], "%Y-%m-%dT%H:%M:%SZ")
+	timestamp = calendar.timegm(deli_time)
+        #time_obj = datetime.datetime(*time_lst[0:7])
+	time_obj = datetime.fromtimestamp(timestamp)
         tags = self.clean_tags(post_elem.attrib['tag'])
 
         try:
