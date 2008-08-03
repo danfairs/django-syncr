@@ -6,6 +6,7 @@ with several web APIs. It currently supports 4 services:
    - YouTube (http://youtube.com)
    - del.icio.us (http://del.icio.us)
    - Twitter (http://twitter.com)
+   - Ma.gnolia (http://ma.gnolia.com)
 
 Additional web services can be added easily. Suggestions for
 more services and/or patches welcome!
@@ -18,6 +19,10 @@ you need to download it from http://effbot.org/zone/element-index.htm.
 
 The twitter app depends on python-twitter, available at:
 http://code.google.com/p/python-twitter/
+
+The magnolia app depends on pymagnolia, available at:
+http://www.everes.net/pymagnolia/
+For working I have place the pymagnolia.py in magnolia app.
 
 The flickr app depends on Beej's Python flickrapi, available at:
 http://flickrapi.sourceforge.net/
@@ -34,6 +39,7 @@ INSTALLATION / USAGE
    'syncr.youtube'
    'syncr.twitter'
    'syncr.delicious'
+   'syncr.magnolia'
 3. Use the interfaces provided in syncr.app to write scripts
    for synchronizing the web service data with the Django backend.
 
@@ -52,6 +58,12 @@ INSTALLATION / USAGE
 4. Explore the results in the Django admin interface.
 
 CHANGELOG
+
+v0.37 (August 3, 2008)
+ * Added magnolia syncr app to sync magnolia bookmarks to you django project.
+ * Supports all the features provided by magnolia.
+ * Include rating for each bookmark and also screenshot of the link.
+ * check out the magnolia-syncr documentation in doc folder.
 
 v0.36 (May 30, 2008)
  * Added syncUserUploads method to YoutubeSyncr class

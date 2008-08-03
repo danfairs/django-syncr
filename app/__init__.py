@@ -1,8 +1,9 @@
 """A utility to synchronize various web 2.0 APIs with Django.
 
 Currently includes four modules supporting the following services:
-flickr, youtube, delicious and twitter.
+flickr, youtube, delicious, magnolia and twitter.
 """
 
 __author__ = 'jesse@jesselegg.com'
-__version__ = '0.35'
+__co_author__ = 'yash888@gmail.com'
+__version__ = '0.37'
