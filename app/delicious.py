@@ -112,7 +112,7 @@ class DeliciousSyncr:
         if tag: params['tag'] = tag
         result = self.delicious._request('posts/recent?', params)
         root = result.getroot()
-        for post in root.getchildren():
+        for post in list(root):
             self._syncPost(post)
 
     def syncAll(self, tag=None):
@@ -126,7 +126,7 @@ class DeliciousSyncr:
         if tag: params = {'tag': tag}
         result = self.delicious._request('posts/all?', params)
         root = result.getroot()
-        for post in root.getchildren():
+        for post in list(root):
             self._syncPost(post)
 
     def datetime2delicious(self, dt):
@@ -152,5 +152,5 @@ class DeliciousSyncr:
             params['date'] = self.datetime2delicious(params['date'])
         result = self.delicious._request('posts/get?', )
         root = result.getroot()
-        for post in root.getchildren():
+        for post in list(root):
             self._syncPost(post)
