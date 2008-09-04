@@ -17,6 +17,10 @@ class Photo(models.Model):
     owner = models.CharField(max_length=50)
     owner_nsid = models.CharField(max_length=50)
     title = models.CharField(max_length=200)
+    slug = models.SlugField(
+	unique_for_date='taken_date',
+	help_text='Automatically built from the title.'
+    )
     description = models.TextField(blank=True)
     taken_date = models.DateTimeField()
     photopage_url = models.URLField()
@@ -24,7 +28,7 @@ class Photo(models.Model):
     small_url = models.URLField()
     medium_url = models.URLField()
     thumbnail_url = models.URLField()
-    tag_list = models.CharField(max_length=250, validator_list=[isTagList])
+    tag_list = models.CharField(max_length=250)
     enable_comments = models.BooleanField(default=True)
     license = models.CharField(max_length=50, choices=FLICKR_LICENSES)
     geo_latitude = models.CharField(max_length=50, blank=True)
@@ -51,7 +55,7 @@ class Photo(models.Model):
         Tag.objects.update_tags(self, tag_list)
     tags = property(_get_tags, _set_tags)
 
-    def save(self):
+    def save(self, force_insert=False, force_update=False):
         super(Photo, self).save()
         Tag.objects.update_tags(self, self.tag_list)
 

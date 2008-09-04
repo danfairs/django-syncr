@@ -5,6 +5,7 @@ import math
 import flickrapi
 from django.core.exceptions import ObjectDoesNotExist
 from syncr.flickr.models import Photo, PhotoSet, FavoriteList
+from django.template import defaultfilters
 
 class FlickrSyncr:
     """FlickrSyncr objects sync flickr photos, photo sets, and favorites
@@ -129,11 +130,17 @@ class FlickrSyncr:
         urls = self.getPhotoSizeURLs(photo_id)
         exif_data = self.getExifInfo(photo_id)
         geo_data = self.getGeoLocation(photo_id)
+        
+        try:
+            urls['Medium']
+        except KeyError:
+            urls['Medium'] = urls['Small']    # if Medium exists good, if it doesn't exist take the small url, YASHH Aug 16th 2008.
 
 	default_dict = {'flickr_id': photo_xml.photo[0]['id'],
 			'owner': photo_xml.photo[0].owner[0]['username'],
 			'owner_nsid': photo_xml.photo[0].owner[0]['nsid'],
 			'title': photo_xml.photo[0].title[0].text,
+			'slug': defaultfilters.slugify(photo_xml.photo[0].title[0].text.lower()),
 			'description': photo_xml.photo[0].description[0].text,
 			'taken_date': datetime(*strptime(photo_xml.photo[0].dates[0]['taken'], "%Y-%m-%d %H:%M:%S")[:7]),
 			'photopage_url': photo_xml.photo[0].urls[0].url[0].text,
