@@ -1,5 +1,4 @@
 from django.db import models
-from tagging.validators import isTagList
 from tagging.models import Tag, TaggedItem
 
 class Video(models.Model):
