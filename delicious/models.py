@@ -1,12 +1,12 @@
 from django.db import models
-from tagging.validators import isTagList
+from tagging.validators import is_tag_list
 from tagging.models import Tag, TaggedItem
 
 class Bookmark(models.Model):
     # description, href, tags, extended, dt
     description = models.CharField(max_length=250, blank=True)
     url = models.URLField()
-    tag_list = models.CharField(max_length=250, validator_list=[isTagList], blank=True)
+    tag_list = models.CharField(max_length=250, validator_list=[is_tag_list], blank=True)
     extended_info = models.CharField(max_length=250, blank=True)
     post_hash = models.CharField(max_length=100)
     saved_date = models.DateTimeField()

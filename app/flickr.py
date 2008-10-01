@@ -5,6 +5,7 @@ import math
 import flickrapi
 from django.core.exceptions import ObjectDoesNotExist
 from syncr.flickr.models import Photo, PhotoSet, FavoriteList
+from syncr.flickr.slug import get_unique_slug_for_photo
 from django.template import defaultfilters
 
 class FlickrSyncr:
@@ -135,14 +136,21 @@ class FlickrSyncr:
             urls['Medium']
         except KeyError:
             urls['Medium'] = urls['Small']    # if Medium exists good, if it doesn't exist take the small url, YASHH Aug 16th 2008.
-
+      
+        t_date = photo_xml.photo[0].dates[0]['taken']      # Getting the default flickr unicode date.
+        y = t_date.split()[0]                              # converting it into a python datetime
+        taken_date = datetime.datetime(int(y.split('-')[0]), int(y.split('-')[1]), int(y.split('-')[2]))
+        proposed_slug = defaultfilters.slugify(photo_xml.photo[0].title[0].text.lower())
+        slug = get_unique_slug_for_photo(taken_date, propsed_slug)  
+            
+            
 	default_dict = {'flickr_id': photo_xml.photo[0]['id'],
 			'owner': photo_xml.photo[0].owner[0]['username'],
 			'owner_nsid': photo_xml.photo[0].owner[0]['nsid'],
 			'title': photo_xml.photo[0].title[0].text,
-			'slug': defaultfilters.slugify(photo_xml.photo[0].title[0].text.lower()),
+			'slug': slug,
 			'description': photo_xml.photo[0].description[0].text,
-			'taken_date': datetime(*strptime(photo_xml.photo[0].dates[0]['taken'], "%Y-%m-%d %H:%M:%S")[:7]),
+			'taken_date': taken_date,
 			'photopage_url': photo_xml.photo[0].urls[0].url[0].text,
 			'square_url': urls['Square'],
 			'small_url': urls['Small'],
