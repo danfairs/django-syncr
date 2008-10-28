@@ -141,8 +141,7 @@ class FlickrSyncr:
         y = t_date.split()[0]                              # converting it into a python datetime
         taken_date = datetime.datetime(int(y.split('-')[0]), int(y.split('-')[1]), int(y.split('-')[2]))
         proposed_slug = defaultfilters.slugify(photo_xml.photo[0].title[0].text.lower())
-        slug = get_unique_slug_for_photo(taken_date, propsed_slug)  
-            
+        slug = get_unique_slug_for_photo(taken_date, proposed_slug)  
             
 	default_dict = {'flickr_id': photo_xml.photo[0]['id'],
 			'owner': photo_xml.photo[0].owner[0]['username'],

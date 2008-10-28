@@ -23,8 +23,8 @@ class Bookmark(models.Model):
     def get_absolute_url(self):
         return "/links/%s/" % self.id
 
-    def save(self):
-        super(Bookmark, self).save()
+    def save(self, force_insert=False, force_update=False):
+        super(Bookmark, self).save(force_insert, force_update)
         Tag.objects.update_tags(self, self.tag_list)
 
     class Meta:
