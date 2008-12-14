@@ -1,31 +1,25 @@
 from django.db import models
-from tagging.models import Tag, TaggedItem
+from tagging.fields import TagField
 
 class Bookmark(models.Model):
     # description, href, tags, extended, dt
     description = models.CharField(max_length=250, blank=True)
-    url = models.URLField()
-    tag_list = models.CharField(max_length=250, blank=True)
-    extended_info = models.CharField(max_length=250, blank=True)
+    url = models.URLField(unique=True)
+    tags = TagField()
+    extended_info = models.TextField(blank=True)
     post_hash = models.CharField(max_length=100)
     saved_date = models.DateTimeField()
-
-    def __unicode__(self):
-        return u'%s' % self.description
-
-    def _get_tags(self):
-        return Tag.objects.get_for_object(self)
-    def _set_tags(self, tag_list):
-        Tag.objects.update_tags(self, tag_list)
-    tags = property(_get_tags, _set_tags)
-
-    def get_absolute_url(self):
-        return "/links/%s/" % self.id
-
-    def save(self, force_insert=False, force_update=False):
-        super(Bookmark, self).save(force_insert, force_update)
-        Tag.objects.update_tags(self, self.tag_list)
 
     class Meta:
         ordering = ('-saved_date',)
         get_latest_by = 'saved_date'
+
+    def __unicode__(self):
+        return self.description
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('bookmark_detail', (), { 'year': self.saved_date.strftime('%Y'),
+                                         'month': self.saved_date.strftime('%m'),
+                                         'day': self.saved_date.strftime('%d'),
+                                         'object_id': self.id })

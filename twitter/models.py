@@ -12,8 +12,6 @@ class Tweet(models.Model):
     def url(self):
         return u'http://twitter.com/%s/statuses/%s' % (self.user.screen_name, self.twitter_id)
 
-
-
 class TwitterUser(models.Model):
     screen_name = models.CharField(max_length=50)
     description = models.CharField(max_length=250, blank=True, null=True)

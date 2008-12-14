@@ -6,15 +6,17 @@ import elementtree.ElementTree as ET
 from syncr.delicious.models import Bookmark
 
 class DeliciousAPI:
-    """DeliciousAPI is a bare-bones interface to the del.icio.us API. It's
+    """
+    DeliciousAPI is a bare-bones interface to the del.icio.us API. It's
     used by DeliciousSyncr objects and it's not recommended to use it
     directly.
     """
     _deliciousApiHost = 'https://api.del.icio.us/'
     _deliciousApiURL  = 'https://api.del.icio.us/v1/'
-    
+
     def __init__(self, user, passwd):
-        """Initialize a DeliciousAPI object.
+        """
+        Initialize a DeliciousAPI object.
 
         Required arguments
           user: The del.icio.us username as a string.
@@ -39,12 +41,13 @@ class DeliciousAPI:
 
         credentials = base64.encodestring("%s:%s" % (self.user, self.passwd))
         request.add_header('Authorization', ('Basic %s' % credentials))
-        
+
         f = self.opener.open(request)
         return ET.parse(f)
 
 class DeliciousSyncr:
-    """DeliciousSyncr objects sync del.icio.us bookmarks to the Django
+    """
+    DeliciousSyncr objects sync del.icio.us bookmarks to the Django
     backend. The constructor requires a username and password for
     authenticated access to the API.
 
@@ -59,7 +62,8 @@ class DeliciousSyncr:
     http://effbot.org/zone/element-index.htm
     """
     def __init__(self, username, password):
-        """Construct a new DeliciousSyncr.
+        """
+        Construct a new DeliciousSyncr.
 
         Required arguments
           username: a del.icio.us username
@@ -68,7 +72,8 @@ class DeliciousSyncr:
         self.delicious = DeliciousAPI(username, password)
 
     def clean_tags(self, tags):
-        """Utility method to clean up del.icio.us tags, removing double
+        """
+        Utility method to clean up del.icio.us tags, removing double
         quotes, duplicate tags and return a unicode string.
 
         Required arguments
@@ -89,20 +94,28 @@ class DeliciousSyncr:
             extended = post_elem.attrib['extended']
         except KeyError:
             extended = ''
-        default_dict = {'description': post_elem.attrib['description'],
-                        'tag_list': tags,
-                        'url': post_elem.attrib['href'],
-                        # Is post_hash attrib unique to the post/URL or post/username ?!
-                        'post_hash': post_hash,
-                        'saved_date': time_obj,
-                        'extended_info': extended,
-                        }
-        obj, created = Bookmark.objects.get_or_create(post_hash = post_hash,
-                                                      defaults = default_dict)
-        return obj
+        default_dict = {
+            'description': post_elem.attrib['description'],
+            'tags': tags,
+            'url': post_elem.attrib['href'],
+            # Is post_hash attrib unique to the post/URL or post/username ?!
+            'post_hash': post_hash,
+            'saved_date': time_obj,
+            'extended_info': extended,
+        }
+
+        # Save only shared bookmarks
+        try:
+            is_shared = post_elem.attrib['shared'] # Only set, when it isn't shared
+        except KeyError:
+            obj, created = Bookmark.objects.get_or_create(
+                post_hash=post_hash, defaults=default_dict)
+            return obj
+        return None
 
     def syncRecent(self, count=15, tag=None):
-        """Synchronize the user's recent bookmarks.
+        """
+        Synchronize the user's recent bookmarks.
 
         Optional arguments:
           count: The number of bookmarks to return, default 15, max 100.
@@ -116,7 +129,8 @@ class DeliciousSyncr:
             self._syncPost(post)
 
     def syncAll(self, tag=None):
-        """Synchronize all of the user's bookmarks. WARNING this may take
+        """
+        Synchronize all of the user's bookmarks. WARNING this may take
         a while! Excessive use may get you throttled.
 
         Optional arguments
@@ -130,7 +144,8 @@ class DeliciousSyncr:
             self._syncPost(post)
 
     def datetime2delicious(self, dt):
-        """Utility method to convert a Python datetime to a string format
+        """
+        Utility method to convert a Python datetime to a string format
         suitable for the del.icio.us API.
 
         Required arguments
@@ -139,7 +154,8 @@ class DeliciousSyncr:
         return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
     def syncBookmarks(self, **kwargs):
-        """Synchronize bookmarks. If no arguments are used, today's
+        """
+        Synchronize bookmarks. If no arguments are used, today's
         bookmarks will be sync'd.
 
         Optional keyword arguments
