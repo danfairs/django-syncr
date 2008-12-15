@@ -170,6 +170,8 @@ class FavoriteList(models.Model):
     owner = models.CharField(max_length=50)
     sync_date = models.DateTimeField()
     photos = models.ManyToManyField('Photo')
+    primary = models.ForeignKey( \
+	'Photo', related_name='primary_in', null=True)
 
     def numPhotos(self):
         return len(self.photo_list.objects.all())

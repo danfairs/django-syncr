@@ -1,5 +1,5 @@
 import calendar
-import datetime
+from datetime import datetime
 import flickrapi
 import math
 from time import strptime
@@ -75,7 +75,7 @@ class FlickrSyncr:
                 'flickr_id': '1132823-183689226-72157594258079061'
                 'author_nsid': '72875139@N00',
                 'author': 'Ehudphilip',
-                'pub_date': datetime.datetime.fromtimestamp(int('1156878239')),
+                'pub_date': datetime.fromtimestamp(int('1156878239')),
                 'permanent_url': 'http://www.flickr.com/photos/rappensuncle/183689226/#comment72157594258079061',
                 'comment': 'Great shot!!'
             }
@@ -97,7 +97,7 @@ class FlickrSyncr:
                         'flickr_id': el['id'],
                         'author_nsid': el['author'],
                         'author': el['authorname'],
-                        'pub_date': datetime.datetime.fromtimestamp(int(el['datecreate'])),
+                        'pub_date': datetime.fromtimestamp(int(el['datecreate'])),
                         'permanent_url': el['permalink'],
                         'comment': smart_str(el.text)
                     }
@@ -199,9 +199,9 @@ class FlickrSyncr:
         exif_data = self.getExifInfo(photo_id)
         geo_data = self.getGeoLocation(photo_id)
 
-        taken_date = datetime.datetime(*strptime(photo_xml.photo[0].dates[0]['taken'], "%Y-%m-%d %H:%M:%S")[:7])
-        upload_date = datetime.datetime.fromtimestamp(int(photo_xml.photo[0].dates[0]['posted']))
-        update_date = datetime.datetime.fromtimestamp(int(photo_xml.photo[0].dates[0]['lastupdate']))
+        taken_date = datetime(*strptime(photo_xml.photo[0].dates[0]['taken'], "%Y-%m-%d %H:%M:%S")[:7])
+        upload_date = datetime.fromtimestamp(int(photo_xml.photo[0].dates[0]['posted']))
+        update_date = datetime.fromtimestamp(int(photo_xml.photo[0].dates[0]['lastupdate']))
 
         proposed_slug = defaultfilters.slugify(photo_xml.photo[0].title[0].text.lower())
         slug = get_unique_slug_for_photo(taken_date, proposed_slug)
@@ -245,8 +245,8 @@ class FlickrSyncr:
             'medium_height': sizes['Medium']['height'],
             'large_width': sizes['Large']['width'],
             'large_height': sizes['Large']['height'],
-            'original_width': sizes['Original']['width'],
-            'original_height': sizes['Original']['height'],
+            'original_width': sizes['Original']['width'] or 0,
+            'original_height': sizes['Original']['height'] or 0,
             # Removed 'square_url': urls['Square'],
             # Removed 'small_url': urls['Small'],
             # Removed 'medium_url': urls['Medium'],
@@ -346,7 +346,7 @@ class FlickrSyncr:
           days: sync photos since this number of days, defaults
                 to 1 (yesterday)
         """
-        syncSince = datetime.datetime.now() - datetime.timedelta(days=days)
+        syncSince = datetime.now() - datetime.timedelta(days=days)
         timestamp = calendar.timegm(syncSince.timetuple())
         nsid = self.user2nsid(username)
 
@@ -366,8 +366,8 @@ class FlickrSyncr:
           username: a flickr user name as a string
         """
         nsid = self.user2nsid(username)
-        favList, created = FavoriteList.objects.get_or_create(owner = username,
-                                defaults = {'sync_date': datetime.now()})
+        favList, created = FavoriteList.objects.get_or_create( \
+	    owner = username, defaults = {'sync_date': datetime.now()})
 
         result = self.flickr.favorites_getPublicList(user_id=nsid, per_page=500)
         page_count = int(result.photos[0]['pages'])
@@ -375,6 +375,9 @@ class FlickrSyncr:
             photo_list = self._syncPhotoXMLList(result.photos[0].photo)
             for photo in photo_list:
                 favList.photos.add(photo)
+		if page == 1:
+		    favList.primary = photo
+		    favList.save()
             result = self.flickr.favorites_getPublicList(user_id=nsid,
                         per_page=500, page=page+1)
 
@@ -390,16 +393,29 @@ class FlickrSyncr:
         username = self.flickr.people_getInfo(user_id = nsid).person[0].username[0].text
         result = self.flickr.photosets_getPhotos(photoset_id = photoset_id)
         page_count = int(result.photoset[0]['pages'])
+	primary = self.syncPhoto(photoset_xml.photoset[0]['primary'])
 
         d_photoset, created = PhotoSet.objects.get_or_create(
                 flickr_id = photoset_id,
-                defaults = {'owner': username,
-                            'flickr_id': result.photoset[0]['id'],
-                            'primary': None,
-                            'title': photoset_xml.photoset[0].title[0].text,
-                            'description': photoset_xml.photoset[0].description[0].text,
-                            'order': order
-                            })
+                defaults = {
+			'owner': username,
+			'flickr_id': result.photoset[0]['id'],
+			'primary': None,
+			'title': photoset_xml.photoset[0].title[0].text,
+			'description': photoset_xml.photoset[0].description[0].text,
+			'primary': primary.id,
+			'order': order
+			}
+		)
+	if not created: # update it
+	    d_photoset.owner  = username
+	    d_photoset.title  = photoset_xml.photoset[0].title[0].text
+	    d_photoset.description=photoset_xml.photoset[0].description[0].text
+	    d_photoset.primary = primary
+	    d_photoset.save()
+
+	page_count = int(result.photoset[0]['pages'])
+	
         for page in range(1, page_count+1):
             if page > 1:
                 result = self.flickr.photosets_getPhotos(
