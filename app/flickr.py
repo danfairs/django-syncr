@@ -1,5 +1,5 @@
 import calendar
-from datetime import datetime
+from datetime import datetime, timedelta
 import flickrapi
 import math
 from time import strptime
@@ -286,7 +286,7 @@ class FlickrSyncr:
             updated_obj.save()
 
         # Comments
-        comments = self.getPhotoComments(obj.pk)
+        comments = self.getPhotoComments(obj.flickr_id)
         if comments is not None:
             for c in comments:
                 c['photo'] = obj
@@ -346,7 +346,7 @@ class FlickrSyncr:
           days: sync photos since this number of days, defaults
                 to 1 (yesterday)
         """
-        syncSince = datetime.now() - datetime.timedelta(days=days)
+        syncSince = datetime.now() - timedelta(days=days)
         timestamp = calendar.timegm(syncSince.timetuple())
         nsid = self.user2nsid(username)
 

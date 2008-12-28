@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.html import strip_tags
 from django.utils.text import truncate_words
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from tagging.fields import TagField
 
@@ -15,8 +16,23 @@ FLICKR_LICENSES = (
     ('6', 'Attribution-NoDerivs License'),
 )
 
+class BigIntegerField(models.IntegerField):
+    """
+    Defines a PostgreSQL compatible IntegerField needed to prevent 'integer 
+    out of range' with large numbers.
+    """
+    def get_internal_type(self):
+        return 'BigIntegerField'
+
+    def db_type(self):
+        if settings.DATABASE_ENGINE == 'oracle':
+            db_type = 'NUMBER(19)'
+        else:
+            db_type = 'bigint'
+        return db_type
+
 class Photo(models.Model):
-    flickr_id = models.PositiveIntegerField(primary_key=True)
+    flickr_id = BigIntegerField(unique=True)
     owner = models.CharField(max_length=50)
     owner_nsid = models.CharField(max_length=50)
     title = models.CharField(max_length=200)
