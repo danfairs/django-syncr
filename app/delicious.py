@@ -2,9 +2,13 @@ import time, datetime, calendar
 import httplib
 import urllib, urllib2
 import base64
-import elementtree.ElementTree as ET
 from syncr.delicious.models import Bookmark
 
+try:
+    import xml.etree.ElementTree as ET
+except:
+    import elementtree.ElementTree as ET
+    
 class DeliciousAPI:
     """
     DeliciousAPI is a bare-bones interface to the del.icio.us API. It's
