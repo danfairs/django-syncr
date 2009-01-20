@@ -64,7 +64,7 @@ class YoutubeSyncr:
           video_feed: a Youtube video GData feed URL
         """
         result = self._request(video_feed)
-        video_id = result.findtext('{%s}id' % ATOM_NS).lstrip('http://'+self._youtubeGDataHost+self._youtubeFeedBase+'videos/')
+        video_id = result.findtext('{%s}id' % ATOM_NS).replace('http://' + self._youtubeGDataHost + self._youtubeFeedBase + 'videos/', '')
         default_dict = {'feed': video_feed,
                         'video_id': video_id,
                         'published': self.gtime2datetime(result.findtext('{%s}published' % ATOM_NS)),
