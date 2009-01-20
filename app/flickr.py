@@ -400,7 +400,7 @@ class FlickrSyncr:
                 defaults = {
 			'owner': username,
 			'flickr_id': result.photoset[0]['id'],
-			'primary': None,
+			'primary': primary,
 			'title': photoset_xml.photoset[0].title[0].text,
 			'description': photoset_xml.photoset[0].description[0].text,
 			'primary': primary.id,
@@ -440,5 +440,5 @@ class FlickrSyncr:
         nsid = self.user2nsid(username)
         result = self.flickr.photosets_getList(user_id=nsid)
 
-        for i, photoset in enumberate(result.photosets[0].photoset):
+        for i, photoset in enumerate(result.photosets[0].photoset):
             self.syncPhotoSet(photoset['id'], i + 1)
