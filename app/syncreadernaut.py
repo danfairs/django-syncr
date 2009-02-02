@@ -15,7 +15,7 @@ def syncbooks(pagenum):
     I am using dateutil to parse the date in string format into a python datetime object. Check if the book exists
     if it does n't add it to Book model.
     """
-    url1 = "http://readernaut.com/api/v1/"+ settings.READERNAUT_USERNAME + "/books/?page=" + str(pagenum)
+    url1 = "http://readernaut.com/api/v1/xml/"+ settings.READERNAUT_USERNAME + "/books/?page=" + str(pagenum)
     data1 = urllib.urlopen(url1).read()
     x1 = XML2Dict()
     r1 = x1.fromstring(data1)
@@ -46,7 +46,7 @@ class BookSyncr:
         First checking to know how many pages exist for a readernaut user. Append each pagenumber as 
         an argument to 'syncbooks' which actually does the syncing.
         """
-        url = "http://readernaut.com/api/v1/"+settings.READERNAUT_USERNAME+"/books/"
+        url = "http://readernaut.com/api/v1/xml/"+settings.READERNAUT_USERNAME+"/books/"
         data = urllib.urlopen(url).read()
         x = XML2Dict()
         r = x.fromstring(data)
