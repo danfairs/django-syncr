@@ -400,7 +400,6 @@ class FlickrSyncr:
                 defaults = {
 			'owner': username,
 			'flickr_id': result.photoset[0]['id'],
-			'primary': primary,
 			'title': photoset_xml.photoset[0].title[0].text,
 			'description': photoset_xml.photoset[0].description[0].text,
 			'primary': primary.id,
