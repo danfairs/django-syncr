@@ -59,6 +59,10 @@ INSTALLATION / USAGE
 
 CHANGELOG
 
+v0.41 (Dec 14, 2008)
+ * Numerous updates and new services integrated (please see changelog at
+   http://code.google.com/p/django-syncr/source/list)   
+
 v0.37 (August 3, 2008)
  * Added magnolia syncr app to sync magnolia bookmarks to you django project.
  * Supports all the features provided by magnolia.

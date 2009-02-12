@@ -6,4 +6,4 @@ flickr, youtube, delicious, magnolia and twitter.
 
 __author__ = 'jesse@jesselegg.com'
 __co_author__ = 'yash888@gmail.com'
-__version__ = '0.37'
+__version__ = '0.41'

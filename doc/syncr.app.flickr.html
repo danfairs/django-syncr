@@ -18,10 +18,11 @@
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="calendar.html">calendar</a><br>
-</td><td width="25%" valign=top><a href="datetime.html">datetime</a><br>
+<a href="django.template.defaultfilters.html">django.template.defaultfilters</a><br>
 </td><td width="25%" valign=top><a href="flickrapi.html">flickrapi</a><br>
-</td><td width="25%" valign=top><a href="math.html">math</a><br>
-</td></tr></table></td></tr></table><p>
+<a href="math.html">math</a><br>
+</td><td width="25%" valign=top><a href="django.db.models.html">django.db.models</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -60,12 +61,30 @@ Required&nbsp;arguments<br>
 Required&nbsp;arguments<br>
 &nbsp;&nbsp;photo_id:&nbsp;a&nbsp;flickr&nbsp;photo&nbsp;id&nbsp;as&nbsp;a&nbsp;string</tt></dd></dl>
 
+<dl><dt><a name="FlickrSyncr-getExifKey"><strong>getExifKey</strong></a>(self, exif_data, key)</dt></dl>
+
 <dl><dt><a name="FlickrSyncr-getGeoLocation"><strong>getGeoLocation</strong></a>(self, photo_id)</dt><dd><tt>Obtain&nbsp;the&nbsp;geographical&nbsp;location&nbsp;information&nbsp;for&nbsp;a&nbsp;photo_id<br>
 &nbsp;<br>
 Required&nbsp;Arguments<br>
 &nbsp;&nbsp;photo_id:&nbsp;A&nbsp;flickr&nbsp;photo&nbsp;id</tt></dd></dl>
 
-<dl><dt><a name="FlickrSyncr-getPhotoSizeURLs"><strong>getPhotoSizeURLs</strong></a>(self, photo_id)</dt><dd><tt>Return&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;image&nbsp;URLs&nbsp;for&nbsp;a&nbsp;flickr&nbsp;photo.<br>
+<dl><dt><a name="FlickrSyncr-getPhotoComments"><strong>getPhotoComments</strong></a>(self, photo_id)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;comments.<br>
+&nbsp;<br>
+Each&nbsp;comment&nbsp;is&nbsp;represented&nbsp;as&nbsp;dictionary&nbsp;in&nbsp;this&nbsp;format::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;comment&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'flickr_id':&nbsp;'1132823-183689226-72157594258079061'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'author_nsid':&nbsp;'72875139@N00',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'author':&nbsp;'Ehudphilip',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'pub_date':&nbsp;datetime.fromtimestamp(int('1156878239')),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'permanent_url':&nbsp;'<a href="http://www.flickr.com/photos/rappensuncle/183689226/#comment72157594258079061">http://www.flickr.com/photos/rappensuncle/183689226/#comment72157594258079061</a>',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'comment':&nbsp;'Great&nbsp;shot!!'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;<br>
+Required&nbsp;arguments<br>
+&nbsp;&nbsp;photo_id:&nbsp;a&nbsp;flickr&nbsp;photo&nbsp;id&nbsp;as&nbsp;a&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="FlickrSyncr-getPhotoSizes"><strong>getPhotoSizes</strong></a>(self, photo_id)</dt><dd><tt>Return&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;image&nbsp;sizes&nbsp;for&nbsp;a&nbsp;flickr&nbsp;photo.<br>
 &nbsp;<br>
 Required&nbsp;arguments<br>
 &nbsp;&nbsp;photo_id:&nbsp;a&nbsp;flickr&nbsp;photo&nbsp;id&nbsp;as&nbsp;a&nbsp;string</tt></dd></dl>
@@ -88,7 +107,7 @@ Required&nbsp;Arguments<br>
 Optional&nbsp;Arguments<br>
 &nbsp;&nbsp;refresh:&nbsp;A&nbsp;boolean,&nbsp;if&nbsp;true&nbsp;the&nbsp;Photo&nbsp;will&nbsp;be&nbsp;re-sync'd&nbsp;with&nbsp;flickr</tt></dd></dl>
 
-<dl><dt><a name="FlickrSyncr-syncPhotoSet"><strong>syncPhotoSet</strong></a>(self, photoset_id)</dt><dd><tt>Synchronize&nbsp;a&nbsp;single&nbsp;flickr&nbsp;photo&nbsp;set&nbsp;based&nbsp;on&nbsp;the&nbsp;set&nbsp;id.<br>
+<dl><dt><a name="FlickrSyncr-syncPhotoSet"><strong>syncPhotoSet</strong></a>(self, photoset_id, order<font color="#909090">=None</font>)</dt><dd><tt>Synchronize&nbsp;a&nbsp;single&nbsp;flickr&nbsp;photo&nbsp;set&nbsp;based&nbsp;on&nbsp;the&nbsp;set&nbsp;id.<br>
 &nbsp;<br>
 Required&nbsp;arguments<br>
 &nbsp;&nbsp;photoset_id:&nbsp;a&nbsp;flickr&nbsp;photoset&nbsp;id&nbsp;number&nbsp;as&nbsp;a&nbsp;string</tt></dd></dl>
@@ -108,5 +127,24 @@ Optional&nbsp;arguments<br>
 
 <dl><dt><a name="FlickrSyncr-user2nsid"><strong>user2nsid</strong></a>(self, username)</dt><dd><tt>Convert&nbsp;a&nbsp;flickr&nbsp;username&nbsp;to&nbsp;an&nbsp;NSID</tt></dd></dl>
 
-</td></tr></table></td></tr></table>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-strptime"><strong>strptime</strong></a>(...)</dt><dd><tt><a href="#-strptime">strptime</a>(string,&nbsp;format)&nbsp;-&gt;&nbsp;struct_time<br>
+&nbsp;<br>
+Parse&nbsp;a&nbsp;string&nbsp;to&nbsp;a&nbsp;time&nbsp;tuple&nbsp;according&nbsp;to&nbsp;a&nbsp;format&nbsp;specification.<br>
+See&nbsp;the&nbsp;library&nbsp;reference&nbsp;manual&nbsp;for&nbsp;formatting&nbsp;codes&nbsp;(same&nbsp;as&nbsp;strftime()).</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>FLICKR_LICENSES</strong> = (('0', 'All Rights Reserved'), ('1', 'Attribution-NonCommercial-ShareAlike License'), ('2', 'Attribution-NonCommercial License'), ('3', 'Attribution-NonCommercial-NoDerivs License'), ('4', 'Attribution License'), ('5', 'Attribution-ShareAlike License'), ('6', 'Attribution-NoDerivs License'))<br>
+<strong>settings</strong> = &lt;django.conf.LazySettings object at 0x5b2350&gt;</td></tr></table>
 </body></html>
