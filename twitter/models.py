@@ -19,8 +19,12 @@ class TwitterUser(models.Model):
     name        = models.CharField(max_length=50, blank=True, null=True)
     thumbnail_url = models.URLField()
     url         = models.URLField(blank=True, null=True)
-    friends     = models.ManyToManyField('TwitterUser', related_name='friends_user_set', blank=True, null=True)
-    followers   = models.ManyToManyField('TwitterUser', related_name='followers_user_set', blank=True, null=True)
+    friends     = models.ManyToManyField('self', symmetrical=False,
+					 blank=True, null=True,
+					 related_name='friends_user_set')
+    followers   = models.ManyToManyField('self', symmetrical=False,
+					 blank=True, null=True,
+					 related_name='followers_user_set')
 
     def numFriends(self):
         return self.friends.count()
