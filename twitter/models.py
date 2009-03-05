@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 class Tweet(models.Model):
     pub_time    = models.DateTimeField()
@@ -12,6 +13,15 @@ class Tweet(models.Model):
     def url(self):
         return u'http://twitter.com/%s/statuses/%s' % (self.user.screen_name, self.twitter_id)
 
+    def local_pub_time(self):
+	'''
+	Convert the Twitter timestamp stored in pub_time to the timezone
+	specified in DJANGO_SETTINGS_MODULE. Requires pytz.
+	'''
+	import pytz
+	zone = pytz.timezone(settings.TIME_ZONE)
+	return self.pub_time.replace(tzinfo=pytz.utc).astimezone(zone)
+    
 class TwitterUser(models.Model):
     screen_name = models.CharField(max_length=50)
     description = models.CharField(max_length=250, blank=True, null=True)

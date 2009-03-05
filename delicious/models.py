@@ -23,3 +23,12 @@ class Bookmark(models.Model):
                                          'month': self.saved_date.strftime('%m'),
                                          'day': self.saved_date.strftime('%d'),
                                          'object_id': self.id })
+
+    def local_saved_date(self):
+	'''
+	Convert the delicious saved datetime to the timezone specified in
+	DJANGO_SETTINGS_MODULE. Requires pytz.
+	'''
+	import pytz
+	zone = pytz.timezone(settings.TIME_ZONE)
+	return self.saved_date.replace(tzinfo=pytz.utc).astimezone(zone)
