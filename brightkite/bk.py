@@ -186,11 +186,6 @@ class Brightkite(object):
         uri = "http://brightkite.com/me/mentionsstream.xml"
         return self._convert_xml(self._get(quote(uri)))
 
-    def friend_stream(self):
-        "Retrieved friend stream."
-        uri = "http://brightkite.com/me/commentsstream.xml"
-        return self._convert_xml(self._get(quote(uri)))
-
     def checkin(self, place_hash):
         "Checkin at given specified position."
         uri = "http://brightkite.com/places/%s/checkins" % place_hash
