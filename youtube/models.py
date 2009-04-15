@@ -21,7 +21,7 @@ class Video(models.Model):
         Tag.objects.update_tags(self, tag_list)
     tags = property(_get_tags, _set_tags)
 
-    def save(self):
+    def save(self, force_insert=False, force_update=False):
         super(Video, self).save()
         Tag.objects.update_tags(self, self.tag_list)
 
