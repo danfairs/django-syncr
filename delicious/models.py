@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from tagging.fields import TagField
 
 class Bookmark(models.Model):
