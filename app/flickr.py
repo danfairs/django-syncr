@@ -329,11 +329,15 @@ class FlickrSyncr:
           username: a flickr username as a string
         """
         nsid = self.user2nsid(username)
-        count = int(self.flickr.people_getInfo(user_id=nsid).person[0].photos[0].count[0].text)
-        pages = int(math.ceil(count / 500))
-
-        for page in range(1, pages + 1):
-            result = self.flickr.people_getPublicPhotos(user_id=nsid, per_page=500, page=page)
+        count = per_page = int(self.flickr.people_getInfo(
+		user_id=nsid).person[0].photos[0].count[0].text)
+        if count >= 500:
+            per_page = 500
+        pages = count // per_page
+        
+        for page in range(0, pages):
+            result = self.flickr.people_getPublicPhotos(
+		user_id=nsid, per_page=per_page, page=page)
             self._syncPhotoXMLList(result.photos[0].photo)
 
     def syncRecentPhotos(self, username, days=1):
