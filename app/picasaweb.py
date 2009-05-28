@@ -85,7 +85,7 @@ class PicasawebSyncr:
 		raise PicasawebSyncrError("No such album found for: %s" % album_or_id)
 	    albumname = albums[0].name.text
 	
-	updated = datetime(*strptime(photo_entry.updated.text, "%Y-%m-%dT%H:%M:%S.000Z")[:7])
+	updated = datetime(*strptime(photo_entry.updated.text[:-4] + '000Z', "%Y-%m-%dT%H:%M:%S.000Z")[:7])	
 	try:
 	    geo_latitude = photo_entry.geo.latitude()
 	    geo_longtitude = photo_entry.geo.longtitude()
@@ -99,7 +99,9 @@ class PicasawebSyncr:
 	    'owner': username,
 	    'title': photo_entry.title.text,
 	    'description': photo_entry.summary.text or "",
-	    'taken_date': datetime(*strptime(photo_entry.timestamp.isoformat(), "%Y-%m-%dT%H:%M:%S.000Z")[:7]),
+	    'taken_date': datetime(
+		*strptime(photo_entry.timestamp.isoformat()[:-4] +
+			  '000Z', "%Y-%m-%dT%H:%M:%S.000Z")[:7]),
 	    'photopage_url': photo_entry.GetAlternateLink().href,
 	    #'square_url': urls['Square'],
 	    'small_url': photo_entry.media.thumbnail[0].url,
@@ -162,7 +164,8 @@ class PicasawebSyncr:
 		raise PicasawebSyncrError("No such album found for: %s (found %s)" % (album, albums))
 	    album = albums[0]
 	
-	updated = datetime(*strptime(album.updated.text, "%Y-%m-%dT%H:%M:%S.000Z")[:7])
+	updated = datetime(*strptime(album.updated.text[:-4] +
+				     '000Z', "%Y-%m-%dT%H:%M:%S.000Z")[:7])	
 	gphoto_id = album.gphoto_id.text
 	username = album.user.text
 	nickname = album.nickname.text
