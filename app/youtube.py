@@ -65,21 +65,30 @@ class YoutubeSyncr:
         """
         result = self._request(video_feed)
         video_id = result.findtext('{%s}id' % ATOM_NS).replace('http://' + self._youtubeGDataHost + self._youtubeFeedBase + 'videos/', '')
-        default_dict = {'feed': video_feed,
-                        'video_id': video_id,
-                        'published': self.gtime2datetime(result.findtext('{%s}published' % ATOM_NS)),
-                        'updated': self.gtime2datetime(result.findtext('{%s}updated' % ATOM_NS)),
-                        'title': result.findtext('{%s}title' % ATOM_NS),
-                        'author': self.syncUserFeed(result.findtext('{%s}author/{%s}uri' % (ATOM_NS, ATOM_NS))),
-                        'description': result.findtext('{%s}group/{%s}description' % (MRSS_NS, MRSS_NS)) or '',
-                        'tag_list': result.findtext('{%s}group/{%s}keywords' % (MRSS_NS, MRSS_NS)),
-                        'view_count': result.find('{%s}statistics' % YOUTUBE_NS).attrib['viewCount'],
-                        'url': filter(lambda x: x.attrib['rel'] == 'alternate',
-                                      result.findall('{%s}link' % ATOM_NS))[0].attrib['href'],
-                        'thumbnail_url': filter(lambda x: x.attrib['height'] == '240',
-                                                result.findall('{%s}group/{%s}thumbnail' % (MRSS_NS, MRSS_NS)))[0].attrib['url'],
-                        'length': result.find('{%s}group/{%s}duration' % (MRSS_NS, YOUTUBE_NS)).attrib['seconds'],
-                        }
+        default_dict = {
+	    'feed': video_feed,
+	    'video_id': video_id,
+	    'published': self.gtime2datetime(result.findtext(
+		    '{%s}published' % ATOM_NS)),
+	    'updated': self.gtime2datetime(result.findtext(
+		    '{%s}updated' % ATOM_NS)),
+	    'title': result.findtext('{%s}title' % ATOM_NS),
+	    'author': self.syncUserFeed(result.findtext(
+		    '{%s}author/{%s}uri' % (ATOM_NS, ATOM_NS))),
+	    'description': result.findtext(
+		'{%s}group/{%s}description' % (MRSS_NS, MRSS_NS)) or '',
+	    'tag_list': result.findtext(
+		'{%s}group/{%s}keywords' % (MRSS_NS, MRSS_NS)),
+	    'view_count': getattr(result.find('{%s}statistics' % YOUTUBE_NS),
+				  'attrib', {}).get('viewCount', 0),
+	    'url': filter(lambda x: x.attrib['rel'] == 'alternate',
+			  result.findall('{%s}link' %
+					 ATOM_NS))[0].attrib['href'],
+	    'thumbnail_url': filter(lambda x: x.attrib['height'] == '240',
+				    result.findall('{%s}group/{%s}thumbnail' % (MRSS_NS, MRSS_NS)))[0].attrib['url'],
+	    'length': result.find('{%s}group/{%s}duration' %
+				  (MRSS_NS, YOUTUBE_NS)).attrib['seconds'],
+	    }
         obj, created = Video.objects.get_or_create(feed = video_feed,
                                                    defaults=default_dict)
         return obj
