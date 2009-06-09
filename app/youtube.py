@@ -199,9 +199,8 @@ class YoutubeSyncr:
           username: a Youtube username as a string
         """
         user = self.syncUser(username)
-        result = self._request('http://'+self._youtubeGDataHost+self._youtubeFeedBase+'users/%s/favorites' % username)
-        for entry in result.findall('{%s}entry' % ATOM_NS):
-            video = self.syncVideoFeed(entry.findtext('{%s}id' % ATOM_NS))
+        videos = self._syncFeed('http://'+self._youtubeGDataHost+self._youtubeFeedBase+'users/%s/favorites' % username)
+        for video in videos:
             user.favorites.add(video)
         return user.favorites.all()
 
@@ -212,9 +211,33 @@ class YoutubeSyncr:
 	  username: a Youtube username as a string
 	"""
 	user = self.syncUser(username)
-	result = self._request('http://'+self._youtubeGDataHost+self._youtubeFeedBase+'users/%s/uploads' % username)
+	videos = self._syncFeed('http://'+self._youtubeGDataHost+self._youtubeFeedBase+'users/%s/uploads' % username)
 
-	for entry in result.findall('{%s}entry' % ATOM_NS):
-	    video = self.syncVideoFeed(entry.findtext('{%s}id' % ATOM_NS))
+	for video in videos:
 	    user.uploads.add(video)
 	return user.uploads.all()
+
+    def _getSyncFeedParams(self, startIndex=None, maxResults=None):
+        param_build = []
+        if startIndex is not None:
+            param_build.append('='.join(('start-index', str(startIndex))))
+        if maxResults is not None:
+            param_build.extend('='.join(('max-results', str(maxResults))))
+        return '&'.join(param_build)
+
+    def _syncFeedPage(self, feedURL, startIndex=None, maxResults=None):
+        result = self._request('?'.join((feedURL, self._getSyncFeedParams(startIndex, maxResults))))
+        for entry in result.findall('{%s}entry' % ATOM_NS):
+            video = self.syncVideoFeed(entry.findtext('{%s}id' % ATOM_NS))
+            yield video
+
+    def _syncFeed(self, feedURL):
+        startIndex = 1
+        more = True
+        while more:
+            more = False
+            for video in self._syncFeedPage(feedURL, startIndex=startIndex):
+                more = True
+                startIndex += 1
+                yield video
+
