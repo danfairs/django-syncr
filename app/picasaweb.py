@@ -198,7 +198,25 @@ class PicasawebSyncr:
 	    d_album.save()
 	
 	# get photo list
-	photo_feed = self.gd_client.GetFeed('/data/feed/api/user/%s/album/%s?kind=photo' % (username, albumname))
+	feed_url = '/data/feed/api/user/%s/album/%s' % (username, albumname)
+	feed_url += '?kind=photo'
+	
+	# if the PICASA_THUMBSIZES and PICASA_IMGMAX values are set in settings.py,
+	# then include those settings in the feed url
+	from django.conf import settings
+
+	# PICASA_THUMBSIZES can be set in settings.py as a tuple of three
+	# sizes. E.g. ( '72c', '160c', '288',)
+	# This setting controls the sizes of the thumbnails provided
+	if getattr(settings, 'PICASA_THUMBSIZES', False):
+	    feed_url += '&thumbsize=%s' % ','.join(settings.PICASA_THUMBSIZES)
+	# PICASA_IMGMAX can be set in settings.py to allow content_url to be
+	# used directly in an <img> tag if this is set to a size up to 800.
+	if getattr(settings, 'PICASA_IMGMAX', False):
+	    feed_url += '&imgmax=%s' % settings.PICASA_IMGMAX
+	
+	photo_feed = self.gd_client.GetFeed(feed_url)
+	
 	for photo_entry in photo_feed.entry:
 	    photo = self._syncPhoto(photo_entry, username, albumname=albumname)
 	    if photo:
