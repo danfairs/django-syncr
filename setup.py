@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
  
 setup(
-    name='syncr',
+    name='django_syncr',
     version='0.42',
     description='Syncronize Django with the web',
     author='Jesse Legg',
