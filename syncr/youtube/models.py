@@ -1,5 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
 from tagging.models import Tag, TaggedItem
+
 
 class Video(models.Model):
     feed        = models.URLField()
@@ -71,6 +73,17 @@ class YoutubeUser(models.Model):
     playlists   = models.ManyToManyField('Playlist')
     favorites   = models.ManyToManyField('Video', related_name='favorited_by')
     uploads     = models.ManyToManyField('Video', related_name='uploaded_by')
+    user        = models.OneToOneField(User, related_name="youtube_acct",
+                                       null=True, blank=True)
 
     def __unicode__(self):
         return u'%s' % self.username
+    
+    def sync(self):
+        from syncr.app.youtube import YoutubeSyncr
+        yts = YoutubeSyncr()
+        yts.syncUser(self.username)
+        yts.syncUserUploads(self.username)
+        yts.syncUserFavorites(self.username)
+        yts.syncUserPlaylists(self.username)
+        
