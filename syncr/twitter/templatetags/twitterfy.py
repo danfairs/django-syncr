@@ -7,6 +7,7 @@ register = template.Library()
 
 hashtag_pattern = re.compile(r"(?P<start>.?)#(?P<hashtag>[A-Za-z_]+)(?P<end>.?)")
 user_pattern = re.compile(r"(?P<start>.?)@(?P<user>[A-Za-z0-9_]+)(?P<end>.?)") 
+link_pattern = re.compile(r'(?P<start>.?)(?P<url>https?://[\w\-\.\&\?\/]+)(?P<end>.?)')
 
 @register.filter(name='twitterfy')
 def twitterfy(tweet):
@@ -18,5 +19,9 @@ def twitterfy(tweet):
     # find usernames, replace with link to profile
     link = r'\g<start>@<a href="http://twitter.com/\g<user>"  title="#\g<user> on Twitter">\g<user></a>\g<end>'
     text = user_pattern.sub(link,tweet)
+
+    # find links, make them real links
+    link = r'\g<start><a href="\g<url>" title="\g<url>">\g<url></a>\g<end>'
+    text = link_pattern.sub(link, tweet)
     
     return mark_safe(text)
