@@ -109,9 +109,13 @@ class DeliciousSyncr:
         }
 
         # Save only shared bookmarks
-        try:
-            is_shared = post_elem.attrib['shared'] # Only set, when it isn't shared
+        try: 
+            is_shared = post_elem.attrib['shared'] # Only set, when it isn't shared NOT ANYMORE
         except KeyError:
+            obj, created = Bookmark.objects.get_or_create(
+                post_hash=post_hash, defaults=default_dict)
+            return obj
+        if is_shared == 'yes':
             obj, created = Bookmark.objects.get_or_create(
                 post_hash=post_hash, defaults=default_dict)
             return obj
